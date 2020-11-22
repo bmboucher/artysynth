@@ -273,15 +273,24 @@ proc create_root_design { parentCell } {
   set cpu [ create_bd_cell -type ip -vlnv xilinx.com:ip:microblaze:11.0 cpu ]
   set_property -dict [ list \
    CONFIG.C_ADDR_TAG_BITS {0} \
+   CONFIG.C_BRANCH_TARGET_CACHE_SIZE {0} \
    CONFIG.C_CACHE_BYTE_SIZE {16384} \
    CONFIG.C_DCACHE_ADDR_TAG {0} \
    CONFIG.C_DCACHE_BYTE_SIZE {16384} \
    CONFIG.C_DEBUG_ENABLED {1} \
+   CONFIG.C_DIV_ZERO_EXCEPTION {1} \
    CONFIG.C_D_AXI {1} \
    CONFIG.C_D_LMB {1} \
    CONFIG.C_I_LMB {1} \
+   CONFIG.C_UNALIGNED_EXCEPTIONS {0} \
+   CONFIG.C_USE_BRANCH_TARGET_CACHE {1} \
    CONFIG.C_USE_DCACHE {0} \
+   CONFIG.C_USE_DIV {1} \
+   CONFIG.C_USE_FPU {0} \
+   CONFIG.C_USE_HW_MUL {1} \
    CONFIG.C_USE_ICACHE {0} \
+   CONFIG.C_USE_MSR_INSTR {0} \
+   CONFIG.G_USE_EXCEPTIONS {1} \
  ] $cpu
 
   # Create instance: cpu_axi_periph, and set properties
