@@ -2,10 +2,10 @@
 <Root MajorVersion="0" MinorVersion="39">
   <CompositeFile CompositeFileTopName="top" CanBeSetAsTop="false" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1606074930"/>
-    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1606074930"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1606074930"/>
-    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1606074930"/>
+    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1606163170"/>
+    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1606163170"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1606163170"/>
+    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1606163170"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
       <File Name="ip\top_clk_wiz_0_0\top_clk_wiz_0_0.xci" Type="IP">
         <Instance HierarchyPath="clk"/>
@@ -90,6 +90,38 @@
       <File Name="ip\top_cpu_axi_periph_0\top_cpu_axi_periph_0.xci" Type="IP">
         <Instance HierarchyPath="cpu_axi_periph"/>
         <Properties IsEditable="false" IsVisible="false" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip\top_xbar_0\top_xbar_0.xci" Type="IP">
+        <Instance HierarchyPath="cpu_axi_periph/xbar"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip\top_axi_bram_ctrl_0_0\top_axi_bram_ctrl_0_0.xci" Type="IP">
+        <Instance HierarchyPath="cpu_freq_bram_axi"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip\top_blk_mem_gen_0_2\top_blk_mem_gen_0_2.xci" Type="IP">
+        <Instance HierarchyPath="freq_bram"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip\top_fifo_generator_0_0\top_fifo_generator_0_0.xci" Type="IP">
+        <Instance HierarchyPath="osc_state_fifo"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
         <UsedIn Val="IMPLEMENTATION"/>

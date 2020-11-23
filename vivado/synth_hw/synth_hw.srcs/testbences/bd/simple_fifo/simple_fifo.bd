@@ -1,0 +1,128 @@
+{
+  "design": {
+    "design_info": {
+      "boundary_crc": "0x77D2A164EA6E9C6E",
+      "device": "xc7a35ticsg324-1L",
+      "name": "simple_fifo",
+      "rev_ctrl_bd_flag": "RevCtrlBdOff",
+      "synth_flow_mode": "None",
+      "tool_version": "2020.1",
+      "validated": "true"
+    },
+    "design_tree": {
+      "fifo": ""
+    },
+    "interface_ports": {
+      "FIFO_WRITE": {
+        "mode": "Slave",
+        "vlnv": "xilinx.com:interface:fifo_write_rtl:1.0"
+      },
+      "FIFO_READ": {
+        "mode": "Slave",
+        "vlnv": "xilinx.com:interface:fifo_read_rtl:1.0"
+      }
+    },
+    "ports": {
+      "clk": {
+        "type": "clk",
+        "direction": "I",
+        "parameters": {
+          "CLK_DOMAIN": {
+            "value": "simple_fifo_clk",
+            "value_src": "default"
+          },
+          "FREQ_HZ": {
+            "value": "100000000"
+          },
+          "FREQ_TOLERANCE_HZ": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "INSERT_VIP": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "PHASE": {
+            "value": "0.000",
+            "value_src": "default"
+          }
+        }
+      },
+      "rst": {
+        "direction": "I"
+      },
+      "valid": {
+        "direction": "O"
+      },
+      "prog_full": {
+        "direction": "O"
+      }
+    },
+    "components": {
+      "fifo": {
+        "vlnv": "xilinx.com:ip:fifo_generator:13.2",
+        "xci_name": "simple_fifo_fifo_generator_0_0",
+        "parameters": {
+          "Fifo_Implementation": {
+            "value": "Common_Clock_Builtin_FIFO"
+          },
+          "Full_Threshold_Assert_Value": {
+            "value": "510"
+          },
+          "Input_Data_Width": {
+            "value": "64"
+          },
+          "Input_Depth": {
+            "value": "512"
+          },
+          "Programmable_Full_Type": {
+            "value": "Single_Programmable_Full_Threshold_Constant"
+          },
+          "Valid_Flag": {
+            "value": "true"
+          }
+        }
+      }
+    },
+    "interface_nets": {
+      "FIFO_READ_1": {
+        "interface_ports": [
+          "FIFO_READ",
+          "fifo/FIFO_READ"
+        ]
+      },
+      "FIFO_WRITE_1": {
+        "interface_ports": [
+          "FIFO_WRITE",
+          "fifo/FIFO_WRITE"
+        ]
+      }
+    },
+    "nets": {
+      "clk_1": {
+        "ports": [
+          "clk",
+          "fifo/clk"
+        ]
+      },
+      "rst_1": {
+        "ports": [
+          "rst",
+          "fifo/rst"
+        ]
+      },
+      "fifo_generator_0_valid": {
+        "ports": [
+          "fifo/valid",
+          "valid"
+        ]
+      },
+      "fifo_generator_0_prog_full": {
+        "ports": [
+          "fifo/prog_full",
+          "prog_full"
+        ]
+      }
+    }
+  }
+}

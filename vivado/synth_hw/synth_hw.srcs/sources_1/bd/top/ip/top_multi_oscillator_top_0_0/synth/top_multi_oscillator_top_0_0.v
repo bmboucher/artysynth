@@ -56,6 +56,16 @@
 (* IP_DEFINITION_SOURCE = "module_ref" *)
 (* DowngradeIPIdentifiedWarnings = "yes" *)
 module top_multi_oscillator_top_0_0 (
+  freq_bram_addr,
+  freq_bram_rddata,
+  state_fifo_full,
+  state_fifo_prog_full,
+  state_fifo_empty,
+  state_fifo_dout,
+  state_fifo_din,
+  state_fifo_wr_en,
+  state_fifo_rd_en,
+  state_fifo_rst,
   ctrl_axi_aclk,
   ctrl_axi_aresetn,
   ctrl_axi_awaddr,
@@ -79,6 +89,18 @@ module top_multi_oscillator_top_0_0 (
   ctrl_axi_rready
 );
 
+output wire [31 : 0] freq_bram_addr;
+input wire [31 : 0] freq_bram_rddata;
+input wire state_fifo_full;
+input wire state_fifo_prog_full;
+input wire state_fifo_empty;
+output wire [63 : 0] state_fifo_dout;
+input wire [63 : 0] state_fifo_din;
+output wire state_fifo_wr_en;
+output wire state_fifo_rd_en;
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME state_fifo_rst, POLARITY ACTIVE_LOW, INSERT_VIP 0" *)
+(* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 state_fifo_rst RST" *)
+output wire state_fifo_rst;
 (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME ctrl_axi_aclk, ASSOCIATED_BUSIF ctrl_axi, ASSOCIATED_RESET ctrl_axi_aresetn, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN /clk_clk_out1, INSERT_VIP 0" *)
 (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 ctrl_axi_aclk CLK" *)
 input wire ctrl_axi_aclk;
@@ -130,6 +152,16 @@ input wire ctrl_axi_rready;
     .C_CTRL_AXI_DATA_WIDTH(32),
     .C_CTRL_AXI_ADDR_WIDTH(7)
   ) inst (
+    .freq_bram_addr(freq_bram_addr),
+    .freq_bram_rddata(freq_bram_rddata),
+    .state_fifo_full(state_fifo_full),
+    .state_fifo_prog_full(state_fifo_prog_full),
+    .state_fifo_empty(state_fifo_empty),
+    .state_fifo_dout(state_fifo_dout),
+    .state_fifo_din(state_fifo_din),
+    .state_fifo_wr_en(state_fifo_wr_en),
+    .state_fifo_rd_en(state_fifo_rd_en),
+    .state_fifo_rst(state_fifo_rst),
     .ctrl_axi_aclk(ctrl_axi_aclk),
     .ctrl_axi_aresetn(ctrl_axi_aresetn),
     .ctrl_axi_awaddr(ctrl_axi_awaddr),

@@ -8,17 +8,26 @@
 		// User parameters ends
 		// Do not modify the parameters beyond this line
 
-
 		// Parameters of Axi Slave Bus Interface CTRL_AXI
 		parameter integer C_CTRL_AXI_DATA_WIDTH	= 32,
 		parameter integer C_CTRL_AXI_ADDR_WIDTH	= 7
 	)
 	(
-		// Users to add ports here
+		// Frequency BRAM ports (read-only)
+		output [31:0] freq_bram_addr,
+        input [31:0] freq_bram_rddata,
+        
+        // State FIFO ports
+        input wire state_fifo_full,
+        input wire state_fifo_prog_full,
+        input wire state_fifo_empty,
+        output [63:0] state_fifo_dout,
+        input [63:0] state_fifo_din,
+        output wire state_fifo_wr_en,
+        output wire state_fifo_rd_en,
+        output wire state_fifo_rst,
 
-		// User ports ends
 		// Do not modify the ports beyond this line
-
 
 		// Ports of Axi Slave Bus Interface CTRL_AXI
 		input wire  ctrl_axi_aclk,
@@ -70,9 +79,29 @@
 		.S_AXI_RVALID(ctrl_axi_rvalid),
 		.S_AXI_RREADY(ctrl_axi_rready)
 	);
-
+	
+    localparam STATE_WIDTH = 32;	
+	
 	// Add user logic here
+	wire fifo_ready;
+    wire [STATE_WIDTH-1:0] prev_state;
+    reg [STATE_WIDTH-1:0] next_state;
 
+    state_fifo # (
+        .WIDTH(STATE_WIDTH)
+    ) state_fifo_inst (
+        .prev_state(prev_state),
+        .next_state(next_state),
+        .clk(clk),
+        .rstn(rstn),
+        .ready(fifo_ready),
+        .state_fifo_prog_full(state_fifo_prog_full),
+        .state_fifo_dout(state_fifo_dout),
+        .state_fifo_wr_en(state_fifo_wr_en),
+        .state_fifo_rd_en(state_fifo_rd_en),
+        .state_fifo_valid(state_fifo_valid),
+        .state_fifo_rst(state_fifo_rst)
+    );
 	// User logic ends
 
 	endmodule

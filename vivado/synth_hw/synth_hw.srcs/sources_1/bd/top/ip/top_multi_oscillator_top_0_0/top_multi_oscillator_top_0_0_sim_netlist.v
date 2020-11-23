@@ -1,10 +1,10 @@
 // Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
-// Date        : Sun Nov 22 14:56:16 2020
+// Date        : Mon Nov 23 15:27:04 2020
 // Host        : DESKTOP-VU7H966 running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim
-//               d:/Repos/artysynth-clean/vivado/synth_hw/synth_hw.srcs/sources_1/bd/top/ip/top_multi_oscillator_top_0_0/top_multi_oscillator_top_0_0_sim_netlist.v
+//               d:/Repos/artysynth/vivado/synth_hw/synth_hw.srcs/sources_1/bd/top/ip/top_multi_oscillator_top_0_0/top_multi_oscillator_top_0_0_sim_netlist.v
 // Design      : top_multi_oscillator_top_0_0
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -16,7 +16,17 @@
 (* X_CORE_INFO = "multi_oscillator_top,Vivado 2020.1" *) 
 (* NotValidForBitStream *)
 module top_multi_oscillator_top_0_0
-   (ctrl_axi_aclk,
+   (freq_bram_addr,
+    freq_bram_rddata,
+    state_fifo_full,
+    state_fifo_prog_full,
+    state_fifo_empty,
+    state_fifo_dout,
+    state_fifo_din,
+    state_fifo_wr_en,
+    state_fifo_rd_en,
+    state_fifo_rst,
+    ctrl_axi_aclk,
     ctrl_axi_aresetn,
     ctrl_axi_awaddr,
     ctrl_axi_awprot,
@@ -37,6 +47,16 @@ module top_multi_oscillator_top_0_0
     ctrl_axi_rresp,
     ctrl_axi_rvalid,
     ctrl_axi_rready);
+  output [31:0]freq_bram_addr;
+  input [31:0]freq_bram_rddata;
+  input state_fifo_full;
+  input state_fifo_prog_full;
+  input state_fifo_empty;
+  output [63:0]state_fifo_dout;
+  input [63:0]state_fifo_din;
+  output state_fifo_wr_en;
+  output state_fifo_rd_en;
+  (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 state_fifo_rst RST" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME state_fifo_rst, POLARITY ACTIVE_LOW, INSERT_VIP 0" *) output state_fifo_rst;
   (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 ctrl_axi_aclk CLK" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME ctrl_axi_aclk, ASSOCIATED_BUSIF ctrl_axi, ASSOCIATED_RESET ctrl_axi_aresetn, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN /clk_clk_out1, INSERT_VIP 0" *) input ctrl_axi_aclk;
   (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 ctrl_axi_aresetn RST" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME ctrl_axi_aresetn, POLARITY ACTIVE_LOW, INSERT_VIP 0" *) input ctrl_axi_aresetn;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 ctrl_axi AWADDR" *) input [6:0]ctrl_axi_awaddr;
@@ -60,6 +80,7 @@ module top_multi_oscillator_top_0_0
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 ctrl_axi RREADY" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME ctrl_axi, DATA_WIDTH 32, PROTOCOL AXI4LITE, FREQ_HZ 100000000, ID_WIDTH 0, ADDR_WIDTH 7, AWUSER_WIDTH 0, ARUSER_WIDTH 0, WUSER_WIDTH 0, RUSER_WIDTH 0, BUSER_WIDTH 0, READ_WRITE_MODE READ_WRITE, HAS_BURST 0, HAS_LOCK 0, HAS_PROT 1, HAS_CACHE 0, HAS_QOS 0, HAS_REGION 0, HAS_WSTRB 1, HAS_BRESP 1, HAS_RRESP 1, SUPPORTS_NARROW_BURST 0, NUM_READ_OUTSTANDING 1, NUM_WRITE_OUTSTANDING 1, MAX_BURST_LENGTH 1, PHASE 0.0, CLK_DOMAIN /clk_clk_out1, NUM_READ_THREADS 1, NUM_WRITE_THREADS 1, RUSER_BITS_PER_BYTE 0, WUSER_BITS_PER_BYTE 0, INSERT_VIP 0" *) input ctrl_axi_rready;
 
   wire \<const0> ;
+  wire \<const1> ;
   wire ctrl_axi_aclk;
   wire [6:0]ctrl_axi_araddr;
   wire ctrl_axi_aresetn;
@@ -82,17 +103,117 @@ module top_multi_oscillator_top_0_0
   assign ctrl_axi_bresp[0] = \<const0> ;
   assign ctrl_axi_rresp[1] = \<const0> ;
   assign ctrl_axi_rresp[0] = \<const0> ;
+  assign freq_bram_addr[31] = \<const0> ;
+  assign freq_bram_addr[30] = \<const0> ;
+  assign freq_bram_addr[29] = \<const0> ;
+  assign freq_bram_addr[28] = \<const0> ;
+  assign freq_bram_addr[27] = \<const0> ;
+  assign freq_bram_addr[26] = \<const0> ;
+  assign freq_bram_addr[25] = \<const0> ;
+  assign freq_bram_addr[24] = \<const0> ;
+  assign freq_bram_addr[23] = \<const0> ;
+  assign freq_bram_addr[22] = \<const0> ;
+  assign freq_bram_addr[21] = \<const0> ;
+  assign freq_bram_addr[20] = \<const0> ;
+  assign freq_bram_addr[19] = \<const0> ;
+  assign freq_bram_addr[18] = \<const0> ;
+  assign freq_bram_addr[17] = \<const0> ;
+  assign freq_bram_addr[16] = \<const0> ;
+  assign freq_bram_addr[15] = \<const0> ;
+  assign freq_bram_addr[14] = \<const0> ;
+  assign freq_bram_addr[13] = \<const0> ;
+  assign freq_bram_addr[12] = \<const0> ;
+  assign freq_bram_addr[11] = \<const0> ;
+  assign freq_bram_addr[10] = \<const0> ;
+  assign freq_bram_addr[9] = \<const0> ;
+  assign freq_bram_addr[8] = \<const0> ;
+  assign freq_bram_addr[7] = \<const0> ;
+  assign freq_bram_addr[6] = \<const0> ;
+  assign freq_bram_addr[5] = \<const0> ;
+  assign freq_bram_addr[4] = \<const0> ;
+  assign freq_bram_addr[3] = \<const0> ;
+  assign freq_bram_addr[2] = \<const0> ;
+  assign freq_bram_addr[1] = \<const0> ;
+  assign freq_bram_addr[0] = \<const0> ;
+  assign state_fifo_dout[63] = \<const0> ;
+  assign state_fifo_dout[62] = \<const0> ;
+  assign state_fifo_dout[61] = \<const0> ;
+  assign state_fifo_dout[60] = \<const0> ;
+  assign state_fifo_dout[59] = \<const0> ;
+  assign state_fifo_dout[58] = \<const0> ;
+  assign state_fifo_dout[57] = \<const0> ;
+  assign state_fifo_dout[56] = \<const0> ;
+  assign state_fifo_dout[55] = \<const0> ;
+  assign state_fifo_dout[54] = \<const0> ;
+  assign state_fifo_dout[53] = \<const0> ;
+  assign state_fifo_dout[52] = \<const0> ;
+  assign state_fifo_dout[51] = \<const0> ;
+  assign state_fifo_dout[50] = \<const0> ;
+  assign state_fifo_dout[49] = \<const0> ;
+  assign state_fifo_dout[48] = \<const0> ;
+  assign state_fifo_dout[47] = \<const0> ;
+  assign state_fifo_dout[46] = \<const0> ;
+  assign state_fifo_dout[45] = \<const0> ;
+  assign state_fifo_dout[44] = \<const0> ;
+  assign state_fifo_dout[43] = \<const0> ;
+  assign state_fifo_dout[42] = \<const0> ;
+  assign state_fifo_dout[41] = \<const0> ;
+  assign state_fifo_dout[40] = \<const0> ;
+  assign state_fifo_dout[39] = \<const0> ;
+  assign state_fifo_dout[38] = \<const0> ;
+  assign state_fifo_dout[37] = \<const0> ;
+  assign state_fifo_dout[36] = \<const0> ;
+  assign state_fifo_dout[35] = \<const0> ;
+  assign state_fifo_dout[34] = \<const0> ;
+  assign state_fifo_dout[33] = \<const0> ;
+  assign state_fifo_dout[32] = \<const0> ;
+  assign state_fifo_dout[31] = \<const0> ;
+  assign state_fifo_dout[30] = \<const0> ;
+  assign state_fifo_dout[29] = \<const0> ;
+  assign state_fifo_dout[28] = \<const0> ;
+  assign state_fifo_dout[27] = \<const0> ;
+  assign state_fifo_dout[26] = \<const0> ;
+  assign state_fifo_dout[25] = \<const0> ;
+  assign state_fifo_dout[24] = \<const0> ;
+  assign state_fifo_dout[23] = \<const0> ;
+  assign state_fifo_dout[22] = \<const0> ;
+  assign state_fifo_dout[21] = \<const0> ;
+  assign state_fifo_dout[20] = \<const0> ;
+  assign state_fifo_dout[19] = \<const0> ;
+  assign state_fifo_dout[18] = \<const0> ;
+  assign state_fifo_dout[17] = \<const0> ;
+  assign state_fifo_dout[16] = \<const0> ;
+  assign state_fifo_dout[15] = \<const0> ;
+  assign state_fifo_dout[14] = \<const0> ;
+  assign state_fifo_dout[13] = \<const0> ;
+  assign state_fifo_dout[12] = \<const0> ;
+  assign state_fifo_dout[11] = \<const0> ;
+  assign state_fifo_dout[10] = \<const0> ;
+  assign state_fifo_dout[9] = \<const0> ;
+  assign state_fifo_dout[8] = \<const0> ;
+  assign state_fifo_dout[7] = \<const0> ;
+  assign state_fifo_dout[6] = \<const0> ;
+  assign state_fifo_dout[5] = \<const0> ;
+  assign state_fifo_dout[4] = \<const0> ;
+  assign state_fifo_dout[3] = \<const0> ;
+  assign state_fifo_dout[2] = \<const0> ;
+  assign state_fifo_dout[1] = \<const0> ;
+  assign state_fifo_dout[0] = \<const0> ;
+  assign state_fifo_rd_en = \<const0> ;
+  assign state_fifo_rst = \<const1> ;
+  assign state_fifo_wr_en = \<const0> ;
   GND GND
        (.G(\<const0> ));
+  VCC VCC
+       (.P(\<const1> ));
   top_multi_oscillator_top_0_0_multi_oscillator_top inst
-       (.S_AXI_ARREADY(ctrl_axi_arready),
-        .S_AXI_AWREADY(ctrl_axi_awready),
-        .S_AXI_WREADY(ctrl_axi_wready),
-        .ctrl_axi_aclk(ctrl_axi_aclk),
+       (.ctrl_axi_aclk(ctrl_axi_aclk),
         .ctrl_axi_araddr(ctrl_axi_araddr[3:2]),
         .ctrl_axi_aresetn(ctrl_axi_aresetn),
+        .ctrl_axi_arready(ctrl_axi_arready),
         .ctrl_axi_arvalid(ctrl_axi_arvalid),
         .ctrl_axi_awaddr(ctrl_axi_awaddr[3:2]),
+        .ctrl_axi_awready(ctrl_axi_awready),
         .ctrl_axi_awvalid(ctrl_axi_awvalid),
         .ctrl_axi_bready(ctrl_axi_bready),
         .ctrl_axi_bvalid(ctrl_axi_bvalid),
@@ -100,15 +221,16 @@ module top_multi_oscillator_top_0_0
         .ctrl_axi_rready(ctrl_axi_rready),
         .ctrl_axi_rvalid(ctrl_axi_rvalid),
         .ctrl_axi_wdata(ctrl_axi_wdata),
+        .ctrl_axi_wready(ctrl_axi_wready),
         .ctrl_axi_wstrb(ctrl_axi_wstrb),
         .ctrl_axi_wvalid(ctrl_axi_wvalid));
 endmodule
 
 (* ORIG_REF_NAME = "multi_oscillator_axi" *) 
 module top_multi_oscillator_top_0_0_multi_oscillator_axi
-   (S_AXI_WREADY,
-    S_AXI_AWREADY,
-    S_AXI_ARREADY,
+   (ctrl_axi_wready,
+    ctrl_axi_awready,
+    ctrl_axi_arready,
     ctrl_axi_rdata,
     ctrl_axi_rvalid,
     ctrl_axi_bvalid,
@@ -123,9 +245,9 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
     ctrl_axi_aresetn,
     ctrl_axi_bready,
     ctrl_axi_rready);
-  output S_AXI_WREADY;
-  output S_AXI_AWREADY;
-  output S_AXI_ARREADY;
+  output ctrl_axi_wready;
+  output ctrl_axi_awready;
+  output ctrl_axi_arready;
   output [31:0]ctrl_axi_rdata;
   output ctrl_axi_rvalid;
   output ctrl_axi_bvalid;
@@ -141,9 +263,6 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
   input ctrl_axi_bready;
   input ctrl_axi_rready;
 
-  wire S_AXI_ARREADY;
-  wire S_AXI_AWREADY;
-  wire S_AXI_WREADY;
   wire aw_en_i_1_n_0;
   wire aw_en_reg_n_0;
   wire [3:2]axi_araddr;
@@ -160,8 +279,10 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
   wire ctrl_axi_aclk;
   wire [1:0]ctrl_axi_araddr;
   wire ctrl_axi_aresetn;
+  wire ctrl_axi_arready;
   wire ctrl_axi_arvalid;
   wire [1:0]ctrl_axi_awaddr;
+  wire ctrl_axi_awready;
   wire ctrl_axi_awvalid;
   wire ctrl_axi_bready;
   wire ctrl_axi_bvalid;
@@ -169,6 +290,7 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
   wire ctrl_axi_rready;
   wire ctrl_axi_rvalid;
   wire [31:0]ctrl_axi_wdata;
+  wire ctrl_axi_wready;
   wire [3:0]ctrl_axi_wstrb;
   wire ctrl_axi_wvalid;
   wire [1:0]p_0_in;
@@ -198,7 +320,7 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
     aw_en_i_1
        (.I0(ctrl_axi_awvalid),
         .I1(aw_en_reg_n_0),
-        .I2(S_AXI_AWREADY),
+        .I2(ctrl_axi_awready),
         .I3(ctrl_axi_wvalid),
         .I4(ctrl_axi_bready),
         .I5(ctrl_axi_bvalid),
@@ -214,7 +336,7 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
     \axi_araddr[2]_i_1 
        (.I0(ctrl_axi_araddr[0]),
         .I1(ctrl_axi_arvalid),
-        .I2(S_AXI_ARREADY),
+        .I2(ctrl_axi_arready),
         .I3(axi_araddr[2]),
         .O(\axi_araddr[2]_i_1_n_0 ));
   (* SOFT_HLUTNM = "soft_lutpair0" *) 
@@ -223,7 +345,7 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
     \axi_araddr[3]_i_1 
        (.I0(ctrl_axi_araddr[1]),
         .I1(ctrl_axi_arvalid),
-        .I2(S_AXI_ARREADY),
+        .I2(ctrl_axi_arready),
         .I3(axi_araddr[3]),
         .O(\axi_araddr[3]_i_1_n_0 ));
   FDRE \axi_araddr_reg[2] 
@@ -243,20 +365,20 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
     .INIT(4'h2)) 
     axi_arready_i_1
        (.I0(ctrl_axi_arvalid),
-        .I1(S_AXI_ARREADY),
+        .I1(ctrl_axi_arready),
         .O(axi_arready0));
   FDRE axi_arready_reg
        (.C(ctrl_axi_aclk),
         .CE(1'b1),
         .D(axi_arready0),
-        .Q(S_AXI_ARREADY),
+        .Q(ctrl_axi_arready),
         .R(axi_awready_i_1_n_0));
   LUT6 #(
     .INIT(64'hFBFFFFFF08000000)) 
     \axi_awaddr[2]_i_1 
        (.I0(ctrl_axi_awaddr[0]),
         .I1(ctrl_axi_wvalid),
-        .I2(S_AXI_AWREADY),
+        .I2(ctrl_axi_awready),
         .I3(aw_en_reg_n_0),
         .I4(ctrl_axi_awvalid),
         .I5(p_0_in[0]),
@@ -266,7 +388,7 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
     \axi_awaddr[3]_i_1 
        (.I0(ctrl_axi_awaddr[1]),
         .I1(ctrl_axi_wvalid),
-        .I2(S_AXI_AWREADY),
+        .I2(ctrl_axi_awready),
         .I3(aw_en_reg_n_0),
         .I4(ctrl_axi_awvalid),
         .I5(p_0_in[1]),
@@ -292,7 +414,7 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
     .INIT(16'h2000)) 
     axi_awready_i_2
        (.I0(ctrl_axi_wvalid),
-        .I1(S_AXI_AWREADY),
+        .I1(ctrl_axi_awready),
         .I2(aw_en_reg_n_0),
         .I3(ctrl_axi_awvalid),
         .O(axi_awready0));
@@ -300,15 +422,15 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
        (.C(ctrl_axi_aclk),
         .CE(1'b1),
         .D(axi_awready0),
-        .Q(S_AXI_AWREADY),
+        .Q(ctrl_axi_awready),
         .R(axi_awready_i_1_n_0));
   LUT6 #(
     .INIT(64'h0000FFFF80008000)) 
     axi_bvalid_i_1
        (.I0(ctrl_axi_awvalid),
         .I1(ctrl_axi_wvalid),
-        .I2(S_AXI_AWREADY),
-        .I3(S_AXI_WREADY),
+        .I2(ctrl_axi_awready),
+        .I3(ctrl_axi_wready),
         .I4(ctrl_axi_bready),
         .I5(ctrl_axi_bvalid),
         .O(axi_bvalid_i_1_n_0));
@@ -833,7 +955,7 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
   LUT4 #(
     .INIT(16'h08F8)) 
     axi_rvalid_i_1
-       (.I0(S_AXI_ARREADY),
+       (.I0(ctrl_axi_arready),
         .I1(ctrl_axi_arvalid),
         .I2(ctrl_axi_rvalid),
         .I3(ctrl_axi_rready),
@@ -850,14 +972,14 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
     axi_wready_i_1
        (.I0(ctrl_axi_awvalid),
         .I1(ctrl_axi_wvalid),
-        .I2(S_AXI_WREADY),
+        .I2(ctrl_axi_wready),
         .I3(aw_en_reg_n_0),
         .O(axi_wready0));
   FDRE axi_wready_reg
        (.C(ctrl_axi_aclk),
         .CE(1'b1),
         .D(axi_wready0),
-        .Q(S_AXI_WREADY),
+        .Q(ctrl_axi_wready),
         .R(axi_awready_i_1_n_0));
   LUT4 #(
     .INIT(16'h0200)) 
@@ -1559,8 +1681,8 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
   LUT4 #(
     .INIT(16'h8000)) 
     \slv_reg3[31]_i_2 
-       (.I0(S_AXI_WREADY),
-        .I1(S_AXI_AWREADY),
+       (.I0(ctrl_axi_wready),
+        .I1(ctrl_axi_awready),
         .I2(ctrl_axi_awvalid),
         .I3(ctrl_axi_wvalid),
         .O(slv_reg_wren__0));
@@ -1769,15 +1891,15 @@ module top_multi_oscillator_top_0_0_multi_oscillator_axi
     slv_reg_rden
        (.I0(ctrl_axi_arvalid),
         .I1(ctrl_axi_rvalid),
-        .I2(S_AXI_ARREADY),
+        .I2(ctrl_axi_arready),
         .O(slv_reg_rden__0));
 endmodule
 
 (* ORIG_REF_NAME = "multi_oscillator_top" *) 
 module top_multi_oscillator_top_0_0_multi_oscillator_top
-   (S_AXI_WREADY,
-    S_AXI_AWREADY,
-    S_AXI_ARREADY,
+   (ctrl_axi_wready,
+    ctrl_axi_awready,
+    ctrl_axi_arready,
     ctrl_axi_rdata,
     ctrl_axi_rvalid,
     ctrl_axi_bvalid,
@@ -1792,9 +1914,9 @@ module top_multi_oscillator_top_0_0_multi_oscillator_top
     ctrl_axi_aresetn,
     ctrl_axi_bready,
     ctrl_axi_rready);
-  output S_AXI_WREADY;
-  output S_AXI_AWREADY;
-  output S_AXI_ARREADY;
+  output ctrl_axi_wready;
+  output ctrl_axi_awready;
+  output ctrl_axi_arready;
   output [31:0]ctrl_axi_rdata;
   output ctrl_axi_rvalid;
   output ctrl_axi_bvalid;
@@ -1810,14 +1932,13 @@ module top_multi_oscillator_top_0_0_multi_oscillator_top
   input ctrl_axi_bready;
   input ctrl_axi_rready;
 
-  wire S_AXI_ARREADY;
-  wire S_AXI_AWREADY;
-  wire S_AXI_WREADY;
   wire ctrl_axi_aclk;
   wire [1:0]ctrl_axi_araddr;
   wire ctrl_axi_aresetn;
+  wire ctrl_axi_arready;
   wire ctrl_axi_arvalid;
   wire [1:0]ctrl_axi_awaddr;
+  wire ctrl_axi_awready;
   wire ctrl_axi_awvalid;
   wire ctrl_axi_bready;
   wire ctrl_axi_bvalid;
@@ -1825,18 +1946,18 @@ module top_multi_oscillator_top_0_0_multi_oscillator_top
   wire ctrl_axi_rready;
   wire ctrl_axi_rvalid;
   wire [31:0]ctrl_axi_wdata;
+  wire ctrl_axi_wready;
   wire [3:0]ctrl_axi_wstrb;
   wire ctrl_axi_wvalid;
 
   top_multi_oscillator_top_0_0_multi_oscillator_axi multi_oscillator_axi_inst
-       (.S_AXI_ARREADY(S_AXI_ARREADY),
-        .S_AXI_AWREADY(S_AXI_AWREADY),
-        .S_AXI_WREADY(S_AXI_WREADY),
-        .ctrl_axi_aclk(ctrl_axi_aclk),
+       (.ctrl_axi_aclk(ctrl_axi_aclk),
         .ctrl_axi_araddr(ctrl_axi_araddr),
         .ctrl_axi_aresetn(ctrl_axi_aresetn),
+        .ctrl_axi_arready(ctrl_axi_arready),
         .ctrl_axi_arvalid(ctrl_axi_arvalid),
         .ctrl_axi_awaddr(ctrl_axi_awaddr),
+        .ctrl_axi_awready(ctrl_axi_awready),
         .ctrl_axi_awvalid(ctrl_axi_awvalid),
         .ctrl_axi_bready(ctrl_axi_bready),
         .ctrl_axi_bvalid(ctrl_axi_bvalid),
@@ -1844,6 +1965,7 @@ module top_multi_oscillator_top_0_0_multi_oscillator_top
         .ctrl_axi_rready(ctrl_axi_rready),
         .ctrl_axi_rvalid(ctrl_axi_rvalid),
         .ctrl_axi_wdata(ctrl_axi_wdata),
+        .ctrl_axi_wready(ctrl_axi_wready),
         .ctrl_axi_wstrb(ctrl_axi_wstrb),
         .ctrl_axi_wvalid(ctrl_axi_wvalid));
 endmodule
