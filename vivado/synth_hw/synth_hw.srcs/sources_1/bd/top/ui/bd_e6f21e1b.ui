@@ -1,24 +1,24 @@
 {
    "ActiveEmotionalView":"Default View",
    "Default View_ScaleFactor":"0.63",
-   "Default View_TopLeft":"-492,0",
+   "Default View_TopLeft":"-487,0",
    "ExpandedHierarchyInLayout":"",
    "guistr":"# # String gsaved with Nlview 7.0r6  2020-01-29 bk=1.5227 VDI=41 GEI=36 GUI=JA:9.0 non-TLS
 #  -string -flagsOSRD
 preplace port S_AXI -pg 1 -lvl 0 -x 0 -y 80 -defaultsOSRD
 preplace port clk -pg 1 -lvl 0 -x 0 -y 100 -defaultsOSRD
 preplace port rst -pg 1 -lvl 0 -x 0 -y 120 -defaultsOSRD
-preplace portBus osc_index -pg 1 -lvl 3 -x 890 -y 370 -defaultsOSRD
-preplace portBus osc_phase -pg 1 -lvl 3 -x 890 -y 390 -defaultsOSRD
-preplace portBus osc_amp -pg 1 -lvl 3 -x 890 -y 410 -defaultsOSRD
-preplace portBus osc_ontime -pg 1 -lvl 3 -x 890 -y 430 -defaultsOSRD
-preplace inst axi_controller -pg 1 -lvl 1 -x 270 -y 100 -defaultsOSRD
-preplace inst param_bram -pg 1 -lvl 2 -x 690 -y 170 -defaultsOSRD
+preplace portBus osc_index -pg 1 -lvl 3 -x 900 -y 370 -defaultsOSRD
+preplace portBus osc_phase -pg 1 -lvl 3 -x 900 -y 390 -defaultsOSRD
+preplace portBus osc_amp -pg 1 -lvl 3 -x 900 -y 410 -defaultsOSRD
+preplace portBus osc_ontime -pg 1 -lvl 3 -x 900 -y 430 -defaultsOSRD
+preplace inst param_bram -pg 1 -lvl 2 -x 700 -y 170 -defaultsOSRD
 preplace inst state_fifo_controller -pg 1 -lvl 1 -x 270 -y 640 -defaultsOSRD
-preplace inst state_fifo -pg 1 -lvl 2 -x 690 -y 650 -defaultsOSRD
+preplace inst state_fifo -pg 1 -lvl 2 -x 700 -y 650 -defaultsOSRD
 preplace inst accumulator -pg 1 -lvl 1 -x 270 -y 370 -defaultsOSRD
+preplace inst axi_controller -pg 1 -lvl 1 -x 270 -y 100 -defaultsOSRD
 preplace netloc clk_1 1 0 2 30 220 500
-preplace netloc rst_1 1 0 2 20 490 520
+preplace netloc rst_1 1 0 2 20 770 510
 preplace netloc axi_controller_freq_mult 1 0 2 50 200 470
 preplace netloc axi_controller_vibrato 1 0 2 60 210 460
 preplace netloc axi_controller_param_bram_data 1 1 1 490 120n
@@ -27,21 +27,21 @@ preplace netloc axi_controller_freq_bram_wen 1 1 1 480 140n
 preplace netloc multi_oscillator_acc_0_param_bram_addr 1 1 1 490 200n
 preplace netloc blk_mem_gen_0_doutb 1 0 2 70 240 N
 preplace netloc multi_oscillator_acc_0_next_state 1 0 2 40 250 470
-preplace netloc state_fifo_0_prev_state 1 0 2 70 510 460
-preplace netloc multi_oscillator_acc_0_state_fifo_en 1 0 2 50 500 460
-preplace netloc fifo_generator_0_valid 1 0 3 80 790 NJ 790 870
-preplace netloc fifo_generator_0_prog_full 1 0 3 70 780 NJ 780 860
+preplace netloc state_fifo_0_prev_state 1 0 2 70 500 460
+preplace netloc multi_oscillator_acc_0_state_fifo_en 1 0 2 60 490 460
+preplace netloc fifo_generator_0_valid 1 0 3 60 790 NJ 790 880
+preplace netloc fifo_generator_0_prog_full 1 0 3 50 780 NJ 780 870
 preplace netloc state_fifo_0_state_fifo_rd_en 1 1 1 N 680
-preplace netloc state_fifo_0_state_fifo_wr_en 1 1 1 460 620n
-preplace netloc state_fifo_0_state_fifo_dout 1 1 1 510 600n
-preplace netloc fifo_generator_0_dout 1 0 2 60 520 480
+preplace netloc state_fifo_0_state_fifo_wr_en 1 1 1 520 620n
+preplace netloc state_fifo_0_state_fifo_dout 1 1 1 480 600n
+preplace netloc fifo_generator_0_dout 1 0 2 70 760 530
 preplace netloc multi_oscillator_acc_0_osc_index 1 1 2 NJ 370 N
 preplace netloc multi_oscillator_acc_0_osc_phase 1 1 2 N 390 NJ
 preplace netloc multi_oscillator_acc_0_osc_amp 1 1 2 N 410 NJ
 preplace netloc multi_oscillator_acc_0_osc_ontime 1 1 2 N 430 NJ
 preplace netloc S_AXI_1 1 0 1 N 80
-levelinfo -pg 1 0 270 690 890
-pagesize -pg 1 -db -bbox -sgen -90 0 1050 800
+levelinfo -pg 1 0 270 700 900
+pagesize -pg 1 -db -bbox -sgen -90 0 1060 800
 "
 }
-
+0

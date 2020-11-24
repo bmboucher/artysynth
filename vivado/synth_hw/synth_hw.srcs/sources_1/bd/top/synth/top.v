@@ -1,7 +1,7 @@
 //Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
-//Date        : Tue Nov 24 01:23:38 2020
+//Date        : Tue Nov 24 08:05:14 2020
 //Host        : DESKTOP-VU7H966 running 64-bit major release  (build 9200)
 //Command     : generate_target top.bd
 //Design      : top
@@ -377,11 +377,11 @@ module multi_oscillator_imp_15JZR68
         .state_fifo_en(multi_oscillator_acc_0_state_fifo_en),
         .vibrato(axi_controller_vibrato));
   top_multi_oscillator_axi_0_0 axi_controller
-       (.S_AXI_ARADDR(S_AXI_1_ARADDR[3:0]),
+       (.S_AXI_ARADDR(S_AXI_1_ARADDR[12:0]),
         .S_AXI_ARPROT(S_AXI_1_ARPROT),
         .S_AXI_ARREADY(S_AXI_1_ARREADY),
         .S_AXI_ARVALID(S_AXI_1_ARVALID),
-        .S_AXI_AWADDR(S_AXI_1_AWADDR[3:0]),
+        .S_AXI_AWADDR(S_AXI_1_AWADDR[12:0]),
         .S_AXI_AWPROT(S_AXI_1_AWPROT),
         .S_AXI_AWREADY(S_AXI_1_AWREADY),
         .S_AXI_AWVALID(S_AXI_1_AWVALID),
@@ -397,10 +397,10 @@ module multi_oscillator_imp_15JZR68
         .S_AXI_WSTRB(S_AXI_1_WSTRB),
         .S_AXI_WVALID(S_AXI_1_WVALID),
         .clk(clk_1),
-        .freq_bram_wen(axi_controller_freq_bram_wen),
         .freq_mult(axi_controller_freq_mult),
         .param_bram_addr(axi_controller_param_bram_addr),
         .param_bram_data(axi_controller_param_bram_data),
+        .param_bram_wen(axi_controller_freq_bram_wen),
         .rst(rst_1),
         .vibrato(axi_controller_vibrato));
   top_blk_mem_gen_0_3 param_bram
@@ -591,21 +591,21 @@ module top
   wire clk_locked;
   wire [31:0]cpu_M_AXI_DP_ARADDR;
   wire [2:0]cpu_M_AXI_DP_ARPROT;
-  wire [0:0]cpu_M_AXI_DP_ARREADY;
+  wire cpu_M_AXI_DP_ARREADY;
   wire cpu_M_AXI_DP_ARVALID;
   wire [31:0]cpu_M_AXI_DP_AWADDR;
   wire [2:0]cpu_M_AXI_DP_AWPROT;
-  wire [0:0]cpu_M_AXI_DP_AWREADY;
+  wire cpu_M_AXI_DP_AWREADY;
   wire cpu_M_AXI_DP_AWVALID;
   wire cpu_M_AXI_DP_BREADY;
   wire [1:0]cpu_M_AXI_DP_BRESP;
-  wire [0:0]cpu_M_AXI_DP_BVALID;
+  wire cpu_M_AXI_DP_BVALID;
   wire [31:0]cpu_M_AXI_DP_RDATA;
   wire cpu_M_AXI_DP_RREADY;
   wire [1:0]cpu_M_AXI_DP_RRESP;
-  wire [0:0]cpu_M_AXI_DP_RVALID;
+  wire cpu_M_AXI_DP_RVALID;
   wire [31:0]cpu_M_AXI_DP_WDATA;
-  wire [0:0]cpu_M_AXI_DP_WREADY;
+  wire cpu_M_AXI_DP_WREADY;
   wire [3:0]cpu_M_AXI_DP_WSTRB;
   wire cpu_M_AXI_DP_WVALID;
   wire [31:0]cpu_axi_periph_M00_AXI_ARADDR;
@@ -909,23 +909,23 @@ module top_cpu_axi_periph_0
   input S00_ARESETN;
   input [31:0]S00_AXI_araddr;
   input [2:0]S00_AXI_arprot;
-  output [0:0]S00_AXI_arready;
-  input [0:0]S00_AXI_arvalid;
+  output S00_AXI_arready;
+  input S00_AXI_arvalid;
   input [31:0]S00_AXI_awaddr;
   input [2:0]S00_AXI_awprot;
-  output [0:0]S00_AXI_awready;
-  input [0:0]S00_AXI_awvalid;
-  input [0:0]S00_AXI_bready;
+  output S00_AXI_awready;
+  input S00_AXI_awvalid;
+  input S00_AXI_bready;
   output [1:0]S00_AXI_bresp;
-  output [0:0]S00_AXI_bvalid;
+  output S00_AXI_bvalid;
   output [31:0]S00_AXI_rdata;
-  input [0:0]S00_AXI_rready;
+  input S00_AXI_rready;
   output [1:0]S00_AXI_rresp;
-  output [0:0]S00_AXI_rvalid;
+  output S00_AXI_rvalid;
   input [31:0]S00_AXI_wdata;
-  output [0:0]S00_AXI_wready;
+  output S00_AXI_wready;
   input [3:0]S00_AXI_wstrb;
-  input [0:0]S00_AXI_wvalid;
+  input S00_AXI_wvalid;
 
   wire S00_ACLK_1;
   wire S00_ARESETN_1;
@@ -934,22 +934,22 @@ module top_cpu_axi_periph_0
   wire [31:0]cpu_axi_periph_to_s00_couplers_ARADDR;
   wire [2:0]cpu_axi_periph_to_s00_couplers_ARPROT;
   wire cpu_axi_periph_to_s00_couplers_ARREADY;
-  wire [0:0]cpu_axi_periph_to_s00_couplers_ARVALID;
+  wire cpu_axi_periph_to_s00_couplers_ARVALID;
   wire [31:0]cpu_axi_periph_to_s00_couplers_AWADDR;
   wire [2:0]cpu_axi_periph_to_s00_couplers_AWPROT;
   wire cpu_axi_periph_to_s00_couplers_AWREADY;
-  wire [0:0]cpu_axi_periph_to_s00_couplers_AWVALID;
-  wire [0:0]cpu_axi_periph_to_s00_couplers_BREADY;
+  wire cpu_axi_periph_to_s00_couplers_AWVALID;
+  wire cpu_axi_periph_to_s00_couplers_BREADY;
   wire [1:0]cpu_axi_periph_to_s00_couplers_BRESP;
   wire cpu_axi_periph_to_s00_couplers_BVALID;
   wire [31:0]cpu_axi_periph_to_s00_couplers_RDATA;
-  wire [0:0]cpu_axi_periph_to_s00_couplers_RREADY;
+  wire cpu_axi_periph_to_s00_couplers_RREADY;
   wire [1:0]cpu_axi_periph_to_s00_couplers_RRESP;
   wire cpu_axi_periph_to_s00_couplers_RVALID;
   wire [31:0]cpu_axi_periph_to_s00_couplers_WDATA;
   wire cpu_axi_periph_to_s00_couplers_WREADY;
   wire [3:0]cpu_axi_periph_to_s00_couplers_WSTRB;
-  wire [0:0]cpu_axi_periph_to_s00_couplers_WVALID;
+  wire cpu_axi_periph_to_s00_couplers_WVALID;
   wire [31:0]s00_couplers_to_cpu_axi_periph_ARADDR;
   wire [2:0]s00_couplers_to_cpu_axi_periph_ARPROT;
   wire s00_couplers_to_cpu_axi_periph_ARREADY;
@@ -983,27 +983,27 @@ module top_cpu_axi_periph_0
   assign M00_AXI_wvalid = s00_couplers_to_cpu_axi_periph_WVALID;
   assign S00_ACLK_1 = S00_ACLK;
   assign S00_ARESETN_1 = S00_ARESETN;
-  assign S00_AXI_arready[0] = cpu_axi_periph_to_s00_couplers_ARREADY;
-  assign S00_AXI_awready[0] = cpu_axi_periph_to_s00_couplers_AWREADY;
+  assign S00_AXI_arready = cpu_axi_periph_to_s00_couplers_ARREADY;
+  assign S00_AXI_awready = cpu_axi_periph_to_s00_couplers_AWREADY;
   assign S00_AXI_bresp[1:0] = cpu_axi_periph_to_s00_couplers_BRESP;
-  assign S00_AXI_bvalid[0] = cpu_axi_periph_to_s00_couplers_BVALID;
+  assign S00_AXI_bvalid = cpu_axi_periph_to_s00_couplers_BVALID;
   assign S00_AXI_rdata[31:0] = cpu_axi_periph_to_s00_couplers_RDATA;
   assign S00_AXI_rresp[1:0] = cpu_axi_periph_to_s00_couplers_RRESP;
-  assign S00_AXI_rvalid[0] = cpu_axi_periph_to_s00_couplers_RVALID;
-  assign S00_AXI_wready[0] = cpu_axi_periph_to_s00_couplers_WREADY;
+  assign S00_AXI_rvalid = cpu_axi_periph_to_s00_couplers_RVALID;
+  assign S00_AXI_wready = cpu_axi_periph_to_s00_couplers_WREADY;
   assign cpu_axi_periph_ACLK_net = M00_ACLK;
   assign cpu_axi_periph_ARESETN_net = M00_ARESETN;
   assign cpu_axi_periph_to_s00_couplers_ARADDR = S00_AXI_araddr[31:0];
   assign cpu_axi_periph_to_s00_couplers_ARPROT = S00_AXI_arprot[2:0];
-  assign cpu_axi_periph_to_s00_couplers_ARVALID = S00_AXI_arvalid[0];
+  assign cpu_axi_periph_to_s00_couplers_ARVALID = S00_AXI_arvalid;
   assign cpu_axi_periph_to_s00_couplers_AWADDR = S00_AXI_awaddr[31:0];
   assign cpu_axi_periph_to_s00_couplers_AWPROT = S00_AXI_awprot[2:0];
-  assign cpu_axi_periph_to_s00_couplers_AWVALID = S00_AXI_awvalid[0];
-  assign cpu_axi_periph_to_s00_couplers_BREADY = S00_AXI_bready[0];
-  assign cpu_axi_periph_to_s00_couplers_RREADY = S00_AXI_rready[0];
+  assign cpu_axi_periph_to_s00_couplers_AWVALID = S00_AXI_awvalid;
+  assign cpu_axi_periph_to_s00_couplers_BREADY = S00_AXI_bready;
+  assign cpu_axi_periph_to_s00_couplers_RREADY = S00_AXI_rready;
   assign cpu_axi_periph_to_s00_couplers_WDATA = S00_AXI_wdata[31:0];
   assign cpu_axi_periph_to_s00_couplers_WSTRB = S00_AXI_wstrb[3:0];
-  assign cpu_axi_periph_to_s00_couplers_WVALID = S00_AXI_wvalid[0];
+  assign cpu_axi_periph_to_s00_couplers_WVALID = S00_AXI_wvalid;
   assign s00_couplers_to_cpu_axi_periph_ARREADY = M00_AXI_arready;
   assign s00_couplers_to_cpu_axi_periph_AWREADY = M00_AXI_awready;
   assign s00_couplers_to_cpu_axi_periph_BRESP = M00_AXI_bresp[1:0];

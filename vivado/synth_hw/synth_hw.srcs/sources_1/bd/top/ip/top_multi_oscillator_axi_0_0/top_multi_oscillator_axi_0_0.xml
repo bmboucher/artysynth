@@ -205,7 +205,7 @@
         </spirit:parameter>
         <spirit:parameter>
           <spirit:name>ADDR_WIDTH</spirit:name>
-          <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.S_AXI.ADDR_WIDTH">4</spirit:value>
+          <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.S_AXI.ADDR_WIDTH">13</spirit:value>
           <spirit:vendorExtensions>
             <xilinx:parameterInfo>
               <xilinx:parameterUsage>none</xilinx:parameterUsage>
@@ -562,7 +562,7 @@
       <spirit:addressBlock>
         <spirit:name>reg0</spirit:name>
         <spirit:baseAddress spirit:format="bitString" spirit:resolve="user" spirit:bitStringLength="32">0</spirit:baseAddress>
-        <spirit:range spirit:format="long" spirit:resolve="dependent" spirit:dependency="pow(2,(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI_ADDR_WIDTH&apos;)) - 1) + 1)" spirit:minimum="4096" spirit:rangeType="long">4096</spirit:range>
+        <spirit:range spirit:format="long" spirit:resolve="dependent" spirit:dependency="pow(2,(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI_ADDR_WIDTH&apos;)) - 1) + 1)" spirit:minimum="4096" spirit:rangeType="long">8192</spirit:range>
         <spirit:width spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI_DATA_WIDTH&apos;)) - 1) + 1">32</spirit:width>
         <spirit:usage>register</spirit:usage>
       </spirit:addressBlock>
@@ -578,7 +578,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:36bd7475</spirit:value>
+            <spirit:value>9:e72cbc9a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -589,7 +589,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:36bd7475</spirit:value>
+            <spirit:value>9:e72cbc9a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -605,11 +605,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Tue Nov 24 06:23:41 UTC 2020</spirit:value>
+            <spirit:value>Tue Nov 24 13:05:16 UTC 2020</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:36bd7475</spirit:value>
+            <spirit:value>9:e72cbc9a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -621,7 +621,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:9b87f83f</spirit:value>
+            <spirit:value>9:adde57ea</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -637,11 +637,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Tue Nov 24 06:23:41 UTC 2020</spirit:value>
+            <spirit:value>Tue Nov 24 13:05:16 UTC 2020</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:9b87f83f</spirit:value>
+            <spirit:value>9:adde57ea</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -655,11 +655,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Tue Nov 24 06:24:37 UTC 2020</spirit:value>
+            <spirit:value>Tue Nov 24 13:06:09 UTC 2020</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:36bd7475</spirit:value>
+            <spirit:value>9:e72cbc9a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -734,7 +734,7 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
-        <spirit:name>freq_bram_wen</spirit:name>
+        <spirit:name>param_bram_wen</spirit:name>
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:wireTypeDefs>
@@ -777,7 +777,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI_ADDR_WIDTH&apos;)) - 1)">3</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI_ADDR_WIDTH&apos;)) - 1)">12</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -961,7 +961,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI_ADDR_WIDTH&apos;)) - 1)">3</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI_ADDR_WIDTH&apos;)) - 1)">12</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1096,11 +1096,6 @@
         <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S_AXI_DATA_WIDTH">32</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
-        <spirit:name>C_S_AXI_ADDR_WIDTH</spirit:name>
-        <spirit:displayName>C S Axi Addr Width</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S_AXI_ADDR_WIDTH">4</spirit:value>
-      </spirit:modelParameter>
-      <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>FREQ_MULT_PARAM_BITS</spirit:name>
         <spirit:displayName>Freq Mult Param Bits</spirit:displayName>
         <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.FREQ_MULT_PARAM_BITS">16</spirit:value>
@@ -1124,6 +1119,16 @@
         <spirit:name>BRAM_DATA_WIDTH</spirit:name>
         <spirit:displayName>Bram Data Width</spirit:displayName>
         <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.BRAM_DATA_WIDTH">32</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>NUM_OSCILLATORS</spirit:name>
+        <spirit:displayName>Num Oscillators</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.NUM_OSCILLATORS">500</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>C_S_AXI_ADDR_WIDTH</spirit:name>
+        <spirit:displayName>C S Axi Addr Width</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S_AXI_ADDR_WIDTH" spirit:dependency="(3 + spirit:decode(id(&apos;MODELPARAM_VALUE.BRAM_ADDR_WIDTH&apos;)))">13</spirit:value>
       </spirit:modelParameter>
     </spirit:modelParameters>
   </spirit:model>
@@ -1189,11 +1194,6 @@
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S_AXI_DATA_WIDTH">32</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
-      <spirit:name>C_S_AXI_ADDR_WIDTH</spirit:name>
-      <spirit:displayName>C S Axi Addr Width</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S_AXI_ADDR_WIDTH">4</spirit:value>
-    </spirit:parameter>
-    <spirit:parameter>
       <spirit:name>FREQ_MULT_PARAM_BITS</spirit:name>
       <spirit:displayName>Freq Mult Param Bits</spirit:displayName>
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.FREQ_MULT_PARAM_BITS">16</spirit:value>
@@ -1217,6 +1217,16 @@
       <spirit:name>BRAM_DATA_WIDTH</spirit:name>
       <spirit:displayName>Bram Data Width</spirit:displayName>
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.BRAM_DATA_WIDTH">32</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>NUM_OSCILLATORS</spirit:name>
+      <spirit:displayName>Num Oscillators</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.NUM_OSCILLATORS">500</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S_AXI_ADDR_WIDTH</spirit:name>
+      <spirit:displayName>C S Axi Addr Width</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S_AXI_ADDR_WIDTH">13</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>Component_Name</spirit:name>

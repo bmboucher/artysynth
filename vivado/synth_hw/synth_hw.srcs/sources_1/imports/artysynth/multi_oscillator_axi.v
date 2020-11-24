@@ -1,6 +1,15 @@
 
 `timescale 1 ns / 1 ps
 
+    // AXI address space 0x1???_???? (dev1: Multi-Oscillator)
+    // ======================================================
+    // REGISTERS
+    //    0x1000_0000 - 0x1000_0002 = Frequency multipliers
+    // Direct mapping to parameter BRAM:
+    //    0b0001_1xxx_xxxx_xxxx_xxxx_????_????_??xx
+    //           ?                   ------------
+    //       BRAM flag               BRAM address
+
 	module multi_oscillator_axi #
 	(
 		// Users to add parameters here
@@ -9,23 +18,25 @@
 		// Do not modify the parameters beyond this line
 
 		// Width of S_AXI data bus
-		parameter integer C_S_AXI_DATA_WIDTH	= 32,
-		// Width of S_AXI address bus
-		parameter integer C_S_AXI_ADDR_WIDTH	= 4,
-		parameter integer FREQ_MULT_PARAM_BITS = 16,
+		parameter integer C_S_AXI_DATA_WIDTH = 32,
+		parameter integer C_S_AXI_ADDR_WIDTH = 32,
+		parameter integer FREQ_MULT_WIDTH = 16,
+		parameter integer NUM_FREQ_MULT = 3,
         parameter integer VIBRATO_WIDTH = 16,
         parameter integer NUM_VIBRATO = 3,
 		parameter integer BRAM_ADDR_WIDTH = 10,
-		parameter integer BRAM_DATA_WIDTH = 32
+		parameter integer BRAM_DATA_WIDTH = 32,
+		parameter integer DEVICE_ID_BITS = 4,
+		parameter integer DEVICE_ID = 1
 	)
 	(
 		// Users to add ports here
-        output [FREQ_MULT_PARAM_BITS-1:0] freq_mult,
+        output [(NUM_FREQ_MULT * FREQ_MULT_WIDTH - 1):0] freq_mult,
         output [(NUM_VIBRATO * VIBRATO_WIDTH - 1):0] vibrato,
         
         output [BRAM_ADDR_WIDTH-1:0] param_bram_addr,
         output [BRAM_DATA_WIDTH-1:0] param_bram_data,
-        output freq_bram_wen,
+        output param_bram_wen,
         
 		// User ports ends
 		// Do not modify the ports beyond this line
@@ -106,6 +117,9 @@
 	reg [C_S_AXI_DATA_WIDTH-1 : 0] 	axi_rdata;
 	reg [1 : 0] 	axi_rresp;
 	reg  	axi_rvalid;
+	
+	wire [DEVICE_ID_BITS-1:0] axi_device_id = axi_awaddr[(C_S_AXI_ADDR_WIDTH-1):(C_S_AXI_ADDR_WIDTH-DEVICE_ID_BITS)];
+	wire axi_device_valid = (axi_device_id == DEVICE_ID);
 
 	// Example-specific design signals
 	// local parameter for addressing 32 bit / 64 bit C_S_AXI_DATA_WIDTH
@@ -219,7 +233,7 @@
 	          axi_wready <= 1'b0;
 	        end
 	    end 
-	end       
+	end
 
 	// Implement memory mapped register select and write logic generation
 	// The write data is accepted and written to memory mapped registers when
@@ -228,7 +242,9 @@
 	// These registers are cleared when reset (active low) is applied.
 	// Slave register write enable is asserted when valid address and data are available
 	// and the slave is ready to accept the write address and write data.
-	assign slv_reg_wren = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID;
+	assign slv_wren = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID && axi_device_valid;
+	assign is_bram_addr = axi_awaddr[BRAM_ADDR_WIDTH + ADDR_LSB];
+	assign slv_reg_wren = slv_wren && ~is_bram_addr;
 
 	always @( posedge S_AXI_ACLK )
 	begin
@@ -379,7 +395,7 @@
 	// Implement memory mapped register select and read logic generation
 	// Slave register read enable is asserted when valid address is available
 	// and the slave is ready to accept the read address.
-	assign slv_reg_rden = axi_arready & S_AXI_ARVALID & ~axi_rvalid;
+	assign slv_reg_rden = axi_arready & S_AXI_ARVALID & ~axi_rvalid && axi_device_valid && ~is_bram_addr;
 	always @(*)
 	begin
 	      // Address decoding for reading registers
@@ -412,10 +428,30 @@
 	end    
 
 	// Add user logic here
-    assign freq_mult = 0;
-    assign freq_bram_addr = 0;
-    assign freq_bram_data = 0;
-    assign freq_bram_wen = 0;
+	
+	// Map a portion of the address space directly to the parameter BRAM
+	// BRAM address ?????? => AXI address ...000001??????xx   (ADDR_LSB=2)
+	wire param_bram_wren = slv_wren && is_bram_addr;
+	
+	// Latch BRAM outputs
+	reg param_bram_wen_reg = 0;
+    reg [BRAM_ADDR_WIDTH-1:0] param_bram_addr_reg;
+    reg [BRAM_DATA_WIDTH-1:0] param_bram_data_reg;
+	always @( posedge clk )
+	begin
+	    if (param_bram_wren) begin
+	       param_bram_wen_reg = 1;
+	       param_bram_addr_reg = axi_awaddr[(BRAM_ADDR_WIDTH + ADDR_LSB - 1):ADDR_LSB];
+	       param_bram_data_reg = S_AXI_WDATA; 
+        end else begin
+           param_bram_wen_reg = 0;
+        end
+	end    
+    assign param_bram_wen = rst ? 0 : param_bram_wen_reg;
+    assign param_bram_addr = param_bram_addr_reg;
+    assign param_bram_data = param_bram_data_reg;
+	
+    assign freq_mult = slv_reg0[(FREQ_MULT_WIDTH-1):0];
 	// User logic ends
 
 	endmodule

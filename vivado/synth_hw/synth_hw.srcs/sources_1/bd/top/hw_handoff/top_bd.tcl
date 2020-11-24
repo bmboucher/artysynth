@@ -265,7 +265,7 @@ proc create_hier_cell_multi_oscillator { parentCell nameHier } {
   connect_bd_intf_net -intf_net S_AXI_1 [get_bd_intf_pins S_AXI] [get_bd_intf_pins axi_controller/S_AXI]
 
   # Create port connections
-  connect_bd_net -net axi_controller_freq_bram_wen [get_bd_pins axi_controller/freq_bram_wen] [get_bd_pins param_bram/wea]
+  connect_bd_net -net axi_controller_freq_bram_wen [get_bd_pins axi_controller/param_bram_wen] [get_bd_pins param_bram/wea]
   connect_bd_net -net axi_controller_freq_mult [get_bd_pins accumulator/freq_mult] [get_bd_pins axi_controller/freq_mult]
   connect_bd_net -net axi_controller_param_bram_addr [get_bd_pins axi_controller/param_bram_addr] [get_bd_pins param_bram/addra]
   connect_bd_net -net axi_controller_param_bram_data [get_bd_pins axi_controller/param_bram_data] [get_bd_pins param_bram/dina]

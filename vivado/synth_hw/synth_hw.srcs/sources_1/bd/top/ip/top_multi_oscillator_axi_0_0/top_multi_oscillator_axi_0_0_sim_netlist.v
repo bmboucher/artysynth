@@ -1,7 +1,7 @@
 // Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
-// Date        : Tue Nov 24 01:24:36 2020
+// Date        : Tue Nov 24 08:06:08 2020
 // Host        : DESKTOP-VU7H966 running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim
 //               d:/Repos/artysynth/vivado/synth_hw/synth_hw.srcs/sources_1/bd/top/ip/top_multi_oscillator_axi_0_0/top_multi_oscillator_axi_0_0_sim_netlist.v
@@ -20,7 +20,7 @@ module top_multi_oscillator_axi_0_0
     vibrato,
     param_bram_addr,
     param_bram_data,
-    freq_bram_wen,
+    param_bram_wen,
     clk,
     rst,
     S_AXI_AWADDR,
@@ -46,10 +46,10 @@ module top_multi_oscillator_axi_0_0
   output [47:0]vibrato;
   output [9:0]param_bram_addr;
   output [31:0]param_bram_data;
-  output freq_bram_wen;
+  output param_bram_wen;
   (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME clk, ASSOCIATED_BUSIF S_AXI, ASSOCIATED_RESET rst, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN /clk_clk_out1, INSERT_VIP 0" *) input clk;
   (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rst RST" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME rst, POLARITY ACTIVE_HIGH, INSERT_VIP 0" *) input rst;
-  (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI AWADDR" *) input [3:0]S_AXI_AWADDR;
+  (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI AWADDR" *) input [12:0]S_AXI_AWADDR;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI AWPROT" *) input [2:0]S_AXI_AWPROT;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI AWVALID" *) input S_AXI_AWVALID;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI AWREADY" *) output S_AXI_AWREADY;
@@ -60,20 +60,20 @@ module top_multi_oscillator_axi_0_0
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI BRESP" *) output [1:0]S_AXI_BRESP;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI BVALID" *) output S_AXI_BVALID;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI BREADY" *) input S_AXI_BREADY;
-  (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI ARADDR" *) input [3:0]S_AXI_ARADDR;
+  (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI ARADDR" *) input [12:0]S_AXI_ARADDR;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI ARPROT" *) input [2:0]S_AXI_ARPROT;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI ARVALID" *) input S_AXI_ARVALID;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI ARREADY" *) output S_AXI_ARREADY;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI RDATA" *) output [31:0]S_AXI_RDATA;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI RRESP" *) output [1:0]S_AXI_RRESP;
   (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI RVALID" *) output S_AXI_RVALID;
-  (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI RREADY" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME S_AXI, DATA_WIDTH 32, PROTOCOL AXI4LITE, FREQ_HZ 100000000, ID_WIDTH 0, ADDR_WIDTH 4, AWUSER_WIDTH 0, ARUSER_WIDTH 0, WUSER_WIDTH 0, RUSER_WIDTH 0, BUSER_WIDTH 0, READ_WRITE_MODE READ_WRITE, HAS_BURST 0, HAS_LOCK 0, HAS_PROT 1, HAS_CACHE 0, HAS_QOS 0, HAS_REGION 0, HAS_WSTRB 1, HAS_BRESP 1, HAS_RRESP 1, SUPPORTS_NARROW_BURST 0, NUM_READ_OUTSTANDING 1, NUM_WRITE_OUTSTANDING 1, MAX_BURST_LENGTH 1, PHASE 0.0, CLK_DOMAIN /clk_clk_out1, NUM_READ_THREADS 1, NUM_WRITE_THREADS 1, RUSER_BITS_PER_BYTE 0, WUSER_BITS_PER_BYTE 0, INSERT_VIP 0" *) input S_AXI_RREADY;
+  (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI RREADY" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME S_AXI, DATA_WIDTH 32, PROTOCOL AXI4LITE, FREQ_HZ 100000000, ID_WIDTH 0, ADDR_WIDTH 13, AWUSER_WIDTH 0, ARUSER_WIDTH 0, WUSER_WIDTH 0, RUSER_WIDTH 0, BUSER_WIDTH 0, READ_WRITE_MODE READ_WRITE, HAS_BURST 0, HAS_LOCK 0, HAS_PROT 1, HAS_CACHE 0, HAS_QOS 0, HAS_REGION 0, HAS_WSTRB 1, HAS_BRESP 1, HAS_RRESP 1, SUPPORTS_NARROW_BURST 0, NUM_READ_OUTSTANDING 1, NUM_WRITE_OUTSTANDING 1, MAX_BURST_LENGTH 1, PHASE 0.0, CLK_DOMAIN /clk_clk_out1, NUM_READ_THREADS 1, NUM_WRITE_THREADS 1, RUSER_BITS_PER_BYTE 0, WUSER_BITS_PER_BYTE 0, INSERT_VIP 0" *) input S_AXI_RREADY;
 
   wire \<const0> ;
-  wire [3:0]S_AXI_ARADDR;
+  wire [12:0]S_AXI_ARADDR;
   wire S_AXI_ARREADY;
   wire S_AXI_ARVALID;
-  wire [3:0]S_AXI_AWADDR;
+  wire [12:0]S_AXI_AWADDR;
   wire S_AXI_AWREADY;
   wire S_AXI_AWVALID;
   wire S_AXI_BREADY;
@@ -86,71 +86,16 @@ module top_multi_oscillator_axi_0_0
   wire [3:0]S_AXI_WSTRB;
   wire S_AXI_WVALID;
   wire clk;
+  wire [15:0]freq_mult;
+  wire [9:0]param_bram_addr;
+  wire [31:0]param_bram_data;
+  wire param_bram_wen;
   wire rst;
 
   assign S_AXI_BRESP[1] = \<const0> ;
   assign S_AXI_BRESP[0] = \<const0> ;
   assign S_AXI_RRESP[1] = \<const0> ;
   assign S_AXI_RRESP[0] = \<const0> ;
-  assign freq_bram_wen = \<const0> ;
-  assign freq_mult[15] = \<const0> ;
-  assign freq_mult[14] = \<const0> ;
-  assign freq_mult[13] = \<const0> ;
-  assign freq_mult[12] = \<const0> ;
-  assign freq_mult[11] = \<const0> ;
-  assign freq_mult[10] = \<const0> ;
-  assign freq_mult[9] = \<const0> ;
-  assign freq_mult[8] = \<const0> ;
-  assign freq_mult[7] = \<const0> ;
-  assign freq_mult[6] = \<const0> ;
-  assign freq_mult[5] = \<const0> ;
-  assign freq_mult[4] = \<const0> ;
-  assign freq_mult[3] = \<const0> ;
-  assign freq_mult[2] = \<const0> ;
-  assign freq_mult[1] = \<const0> ;
-  assign freq_mult[0] = \<const0> ;
-  assign param_bram_addr[9] = \<const0> ;
-  assign param_bram_addr[8] = \<const0> ;
-  assign param_bram_addr[7] = \<const0> ;
-  assign param_bram_addr[6] = \<const0> ;
-  assign param_bram_addr[5] = \<const0> ;
-  assign param_bram_addr[4] = \<const0> ;
-  assign param_bram_addr[3] = \<const0> ;
-  assign param_bram_addr[2] = \<const0> ;
-  assign param_bram_addr[1] = \<const0> ;
-  assign param_bram_addr[0] = \<const0> ;
-  assign param_bram_data[31] = \<const0> ;
-  assign param_bram_data[30] = \<const0> ;
-  assign param_bram_data[29] = \<const0> ;
-  assign param_bram_data[28] = \<const0> ;
-  assign param_bram_data[27] = \<const0> ;
-  assign param_bram_data[26] = \<const0> ;
-  assign param_bram_data[25] = \<const0> ;
-  assign param_bram_data[24] = \<const0> ;
-  assign param_bram_data[23] = \<const0> ;
-  assign param_bram_data[22] = \<const0> ;
-  assign param_bram_data[21] = \<const0> ;
-  assign param_bram_data[20] = \<const0> ;
-  assign param_bram_data[19] = \<const0> ;
-  assign param_bram_data[18] = \<const0> ;
-  assign param_bram_data[17] = \<const0> ;
-  assign param_bram_data[16] = \<const0> ;
-  assign param_bram_data[15] = \<const0> ;
-  assign param_bram_data[14] = \<const0> ;
-  assign param_bram_data[13] = \<const0> ;
-  assign param_bram_data[12] = \<const0> ;
-  assign param_bram_data[11] = \<const0> ;
-  assign param_bram_data[10] = \<const0> ;
-  assign param_bram_data[9] = \<const0> ;
-  assign param_bram_data[8] = \<const0> ;
-  assign param_bram_data[7] = \<const0> ;
-  assign param_bram_data[6] = \<const0> ;
-  assign param_bram_data[5] = \<const0> ;
-  assign param_bram_data[4] = \<const0> ;
-  assign param_bram_data[3] = \<const0> ;
-  assign param_bram_data[2] = \<const0> ;
-  assign param_bram_data[1] = \<const0> ;
-  assign param_bram_data[0] = \<const0> ;
   assign vibrato[47] = \<const0> ;
   assign vibrato[46] = \<const0> ;
   assign vibrato[45] = \<const0> ;
@@ -205,7 +150,7 @@ module top_multi_oscillator_axi_0_0
        (.S_AXI_ARADDR(S_AXI_ARADDR[3:2]),
         .S_AXI_ARREADY(S_AXI_ARREADY),
         .S_AXI_ARVALID(S_AXI_ARVALID),
-        .S_AXI_AWADDR(S_AXI_AWADDR[3:2]),
+        .S_AXI_AWADDR(S_AXI_AWADDR[12:2]),
         .S_AXI_AWREADY(S_AXI_AWREADY),
         .S_AXI_AWVALID(S_AXI_AWVALID),
         .S_AXI_BREADY(S_AXI_BREADY),
@@ -218,42 +163,54 @@ module top_multi_oscillator_axi_0_0
         .S_AXI_WSTRB(S_AXI_WSTRB),
         .S_AXI_WVALID(S_AXI_WVALID),
         .clk(clk),
+        .freq_mult(freq_mult),
+        .param_bram_addr(param_bram_addr),
+        .param_bram_data(param_bram_data),
+        .param_bram_wen(param_bram_wen),
         .rst(rst));
 endmodule
 
 (* ORIG_REF_NAME = "multi_oscillator_axi" *) 
 module top_multi_oscillator_axi_0_0_multi_oscillator_axi
-   (S_AXI_WREADY,
+   (param_bram_wen,
     S_AXI_AWREADY,
+    S_AXI_WREADY,
+    freq_mult,
+    param_bram_addr,
+    param_bram_data,
     S_AXI_ARREADY,
     S_AXI_RDATA,
     S_AXI_RVALID,
     S_AXI_BVALID,
     rst,
     clk,
+    S_AXI_AWADDR,
+    S_AXI_WDATA,
     S_AXI_ARADDR,
     S_AXI_ARVALID,
-    S_AXI_AWADDR,
-    S_AXI_WVALID,
     S_AXI_AWVALID,
-    S_AXI_WDATA,
+    S_AXI_WVALID,
     S_AXI_WSTRB,
     S_AXI_BREADY,
     S_AXI_RREADY);
-  output S_AXI_WREADY;
+  output param_bram_wen;
   output S_AXI_AWREADY;
+  output S_AXI_WREADY;
+  output [15:0]freq_mult;
+  output [9:0]param_bram_addr;
+  output [31:0]param_bram_data;
   output S_AXI_ARREADY;
   output [31:0]S_AXI_RDATA;
   output S_AXI_RVALID;
   output S_AXI_BVALID;
   input rst;
   input clk;
+  input [10:0]S_AXI_AWADDR;
+  input [31:0]S_AXI_WDATA;
   input [1:0]S_AXI_ARADDR;
   input S_AXI_ARVALID;
-  input [1:0]S_AXI_AWADDR;
-  input S_AXI_WVALID;
   input S_AXI_AWVALID;
-  input [31:0]S_AXI_WDATA;
+  input S_AXI_WVALID;
   input [3:0]S_AXI_WSTRB;
   input S_AXI_BREADY;
   input S_AXI_RREADY;
@@ -261,7 +218,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   wire [1:0]S_AXI_ARADDR;
   wire S_AXI_ARREADY;
   wire S_AXI_ARVALID;
-  wire [1:0]S_AXI_AWADDR;
+  wire [10:0]S_AXI_AWADDR;
   wire S_AXI_AWREADY;
   wire S_AXI_AWVALID;
   wire S_AXI_BREADY;
@@ -279,22 +236,31 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   wire \axi_araddr[2]_i_1_n_0 ;
   wire \axi_araddr[3]_i_1_n_0 ;
   wire axi_arready0;
-  wire \axi_awaddr[2]_i_1_n_0 ;
-  wire \axi_awaddr[3]_i_1_n_0 ;
+  wire \axi_awaddr_reg_n_0_[10] ;
+  wire \axi_awaddr_reg_n_0_[11] ;
+  wire \axi_awaddr_reg_n_0_[4] ;
+  wire \axi_awaddr_reg_n_0_[5] ;
+  wire \axi_awaddr_reg_n_0_[6] ;
+  wire \axi_awaddr_reg_n_0_[7] ;
+  wire \axi_awaddr_reg_n_0_[8] ;
+  wire \axi_awaddr_reg_n_0_[9] ;
   wire axi_awready0;
   wire axi_bvalid_i_1_n_0;
   wire axi_rvalid_i_1_n_0;
   wire axi_wready0;
   wire clk;
+  wire [15:0]freq_mult;
   wire [1:0]p_0_in;
+  wire p_0_in2_in;
   wire [31:7]p_1_in;
+  wire [9:0]param_bram_addr;
+  wire [31:0]param_bram_data;
+  wire param_bram_wen;
+  wire param_bram_wen_reg;
+  wire param_bram_wren;
   wire [31:0]reg_data_out;
   wire rst;
-  wire [31:0]slv_reg0;
-  wire \slv_reg0[15]_i_1_n_0 ;
-  wire \slv_reg0[23]_i_1_n_0 ;
-  wire \slv_reg0[31]_i_1_n_0 ;
-  wire \slv_reg0[7]_i_1_n_0 ;
+  wire [31:16]slv_reg0;
   wire [31:0]slv_reg1;
   wire \slv_reg1[15]_i_1_n_0 ;
   wire \slv_reg1[23]_i_1_n_0 ;
@@ -306,16 +272,20 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   wire \slv_reg2[31]_i_1_n_0 ;
   wire \slv_reg2[7]_i_1_n_0 ;
   wire [31:0]slv_reg3;
+  wire \slv_reg3[15]_i_1_n_0 ;
+  wire \slv_reg3[23]_i_1_n_0 ;
+  wire \slv_reg3[31]_i_1_n_0 ;
+  wire \slv_reg3[7]_i_1_n_0 ;
   wire slv_reg_rden__0;
-  wire slv_reg_wren__0;
+  wire slv_reg_wren__2;
 
   LUT6 #(
-    .INIT(64'hF7FFC4CCC4CCC4CC)) 
+    .INIT(64'hBFFF8CCC8CCC8CCC)) 
     aw_en_i_1
-       (.I0(S_AXI_AWVALID),
+       (.I0(S_AXI_AWREADY),
         .I1(aw_en_reg_n_0),
-        .I2(S_AXI_AWREADY),
-        .I3(S_AXI_WVALID),
+        .I2(S_AXI_WVALID),
+        .I3(S_AXI_AWVALID),
         .I4(S_AXI_BREADY),
         .I5(S_AXI_BVALID),
         .O(aw_en_i_1_n_0));
@@ -367,45 +337,79 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
         .D(axi_arready0),
         .Q(S_AXI_ARREADY),
         .R(rst));
-  LUT6 #(
-    .INIT(64'hFBFFFFFF08000000)) 
-    \axi_awaddr[2]_i_1 
-       (.I0(S_AXI_AWADDR[0]),
-        .I1(S_AXI_WVALID),
-        .I2(S_AXI_AWREADY),
-        .I3(aw_en_reg_n_0),
-        .I4(S_AXI_AWVALID),
-        .I5(p_0_in[0]),
-        .O(\axi_awaddr[2]_i_1_n_0 ));
-  LUT6 #(
-    .INIT(64'hFBFFFFFF08000000)) 
-    \axi_awaddr[3]_i_1 
-       (.I0(S_AXI_AWADDR[1]),
-        .I1(S_AXI_WVALID),
-        .I2(S_AXI_AWREADY),
-        .I3(aw_en_reg_n_0),
-        .I4(S_AXI_AWVALID),
-        .I5(p_0_in[1]),
-        .O(\axi_awaddr[3]_i_1_n_0 ));
+  FDRE \axi_awaddr_reg[10] 
+       (.C(clk),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[8]),
+        .Q(\axi_awaddr_reg_n_0_[10] ),
+        .R(rst));
+  FDRE \axi_awaddr_reg[11] 
+       (.C(clk),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[9]),
+        .Q(\axi_awaddr_reg_n_0_[11] ),
+        .R(rst));
+  FDRE \axi_awaddr_reg[12] 
+       (.C(clk),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[10]),
+        .Q(p_0_in2_in),
+        .R(rst));
   FDRE \axi_awaddr_reg[2] 
        (.C(clk),
-        .CE(1'b1),
-        .D(\axi_awaddr[2]_i_1_n_0 ),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[0]),
         .Q(p_0_in[0]),
         .R(rst));
   FDRE \axi_awaddr_reg[3] 
        (.C(clk),
-        .CE(1'b1),
-        .D(\axi_awaddr[3]_i_1_n_0 ),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[1]),
         .Q(p_0_in[1]),
         .R(rst));
+  FDRE \axi_awaddr_reg[4] 
+       (.C(clk),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[2]),
+        .Q(\axi_awaddr_reg_n_0_[4] ),
+        .R(rst));
+  FDRE \axi_awaddr_reg[5] 
+       (.C(clk),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[3]),
+        .Q(\axi_awaddr_reg_n_0_[5] ),
+        .R(rst));
+  FDRE \axi_awaddr_reg[6] 
+       (.C(clk),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[4]),
+        .Q(\axi_awaddr_reg_n_0_[6] ),
+        .R(rst));
+  FDRE \axi_awaddr_reg[7] 
+       (.C(clk),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[5]),
+        .Q(\axi_awaddr_reg_n_0_[7] ),
+        .R(rst));
+  FDRE \axi_awaddr_reg[8] 
+       (.C(clk),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[6]),
+        .Q(\axi_awaddr_reg_n_0_[8] ),
+        .R(rst));
+  FDRE \axi_awaddr_reg[9] 
+       (.C(clk),
+        .CE(axi_awready0),
+        .D(S_AXI_AWADDR[7]),
+        .Q(\axi_awaddr_reg_n_0_[9] ),
+        .R(rst));
   LUT4 #(
-    .INIT(16'h2000)) 
+    .INIT(16'h0080)) 
     axi_awready_i_1
-       (.I0(S_AXI_WVALID),
-        .I1(S_AXI_AWREADY),
+       (.I0(S_AXI_AWVALID),
+        .I1(S_AXI_WVALID),
         .I2(aw_en_reg_n_0),
-        .I3(S_AXI_AWVALID),
+        .I3(S_AXI_AWREADY),
         .O(axi_awready0));
   FDRE axi_awready_reg
        (.C(clk),
@@ -417,9 +421,9 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'h0000FFFF80008000)) 
     axi_bvalid_i_1
        (.I0(S_AXI_AWVALID),
-        .I1(S_AXI_WVALID),
+        .I1(S_AXI_WREADY),
         .I2(S_AXI_AWREADY),
-        .I3(S_AXI_WREADY),
+        .I3(S_AXI_WVALID),
         .I4(S_AXI_BREADY),
         .I5(S_AXI_BVALID),
         .O(axi_bvalid_i_1_n_0));
@@ -433,7 +437,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[0]_i_1 
        (.I0(slv_reg1[0]),
-        .I1(slv_reg0[0]),
+        .I1(freq_mult[0]),
         .I2(slv_reg3[0]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -443,7 +447,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[10]_i_1 
        (.I0(slv_reg1[10]),
-        .I1(slv_reg0[10]),
+        .I1(freq_mult[10]),
         .I2(slv_reg3[10]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -453,7 +457,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[11]_i_1 
        (.I0(slv_reg1[11]),
-        .I1(slv_reg0[11]),
+        .I1(freq_mult[11]),
         .I2(slv_reg3[11]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -463,7 +467,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[12]_i_1 
        (.I0(slv_reg1[12]),
-        .I1(slv_reg0[12]),
+        .I1(freq_mult[12]),
         .I2(slv_reg3[12]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -473,7 +477,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[13]_i_1 
        (.I0(slv_reg1[13]),
-        .I1(slv_reg0[13]),
+        .I1(freq_mult[13]),
         .I2(slv_reg3[13]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -483,7 +487,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[14]_i_1 
        (.I0(slv_reg1[14]),
-        .I1(slv_reg0[14]),
+        .I1(freq_mult[14]),
         .I2(slv_reg3[14]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -493,7 +497,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[15]_i_1 
        (.I0(slv_reg1[15]),
-        .I1(slv_reg0[15]),
+        .I1(freq_mult[15]),
         .I2(slv_reg3[15]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -543,7 +547,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[1]_i_1 
        (.I0(slv_reg1[1]),
-        .I1(slv_reg0[1]),
+        .I1(freq_mult[1]),
         .I2(slv_reg3[1]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -653,7 +657,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[2]_i_1 
        (.I0(slv_reg1[2]),
-        .I1(slv_reg0[2]),
+        .I1(freq_mult[2]),
         .I2(slv_reg3[2]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -683,7 +687,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[3]_i_1 
        (.I0(slv_reg1[3]),
-        .I1(slv_reg0[3]),
+        .I1(freq_mult[3]),
         .I2(slv_reg3[3]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -693,7 +697,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[4]_i_1 
        (.I0(slv_reg1[4]),
-        .I1(slv_reg0[4]),
+        .I1(freq_mult[4]),
         .I2(slv_reg3[4]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -703,7 +707,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[5]_i_1 
        (.I0(slv_reg1[5]),
-        .I1(slv_reg0[5]),
+        .I1(freq_mult[5]),
         .I2(slv_reg3[5]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -713,7 +717,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[6]_i_1 
        (.I0(slv_reg1[6]),
-        .I1(slv_reg0[6]),
+        .I1(freq_mult[6]),
         .I2(slv_reg3[6]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -723,7 +727,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[7]_i_1 
        (.I0(slv_reg1[7]),
-        .I1(slv_reg0[7]),
+        .I1(freq_mult[7]),
         .I2(slv_reg3[7]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -733,7 +737,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[8]_i_1 
        (.I0(slv_reg1[8]),
-        .I1(slv_reg0[8]),
+        .I1(freq_mult[8]),
         .I2(slv_reg3[8]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -743,7 +747,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
     .INIT(64'hF0AAFFCCF0AA00CC)) 
     \axi_rdata[9]_i_1 
        (.I0(slv_reg1[9]),
-        .I1(slv_reg0[9]),
+        .I1(freq_mult[9]),
         .I2(slv_reg3[9]),
         .I3(axi_araddr[3]),
         .I4(axi_araddr[2]),
@@ -957,12 +961,12 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
         .R(rst));
   (* SOFT_HLUTNM = "soft_lutpair1" *) 
   LUT4 #(
-    .INIT(16'h0800)) 
+    .INIT(16'h0080)) 
     axi_wready_i_1
        (.I0(S_AXI_AWVALID),
         .I1(S_AXI_WVALID),
-        .I2(S_AXI_WREADY),
-        .I3(aw_en_reg_n_0),
+        .I2(aw_en_reg_n_0),
+        .I3(S_AXI_WREADY),
         .O(axi_wready0));
   FDRE axi_wready_reg
        (.C(clk),
@@ -970,234 +974,518 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
         .D(axi_wready0),
         .Q(S_AXI_WREADY),
         .R(rst));
+  LUT5 #(
+    .INIT(32'h80000000)) 
+    \param_bram_addr_reg[9]_i_1 
+       (.I0(p_0_in2_in),
+        .I1(S_AXI_WVALID),
+        .I2(S_AXI_AWREADY),
+        .I3(S_AXI_WREADY),
+        .I4(S_AXI_AWVALID),
+        .O(param_bram_wren));
+  FDRE \param_bram_addr_reg_reg[0] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(p_0_in[0]),
+        .Q(param_bram_addr[0]),
+        .R(1'b0));
+  FDRE \param_bram_addr_reg_reg[1] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(p_0_in[1]),
+        .Q(param_bram_addr[1]),
+        .R(1'b0));
+  FDRE \param_bram_addr_reg_reg[2] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(\axi_awaddr_reg_n_0_[4] ),
+        .Q(param_bram_addr[2]),
+        .R(1'b0));
+  FDRE \param_bram_addr_reg_reg[3] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(\axi_awaddr_reg_n_0_[5] ),
+        .Q(param_bram_addr[3]),
+        .R(1'b0));
+  FDRE \param_bram_addr_reg_reg[4] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(\axi_awaddr_reg_n_0_[6] ),
+        .Q(param_bram_addr[4]),
+        .R(1'b0));
+  FDRE \param_bram_addr_reg_reg[5] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(\axi_awaddr_reg_n_0_[7] ),
+        .Q(param_bram_addr[5]),
+        .R(1'b0));
+  FDRE \param_bram_addr_reg_reg[6] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(\axi_awaddr_reg_n_0_[8] ),
+        .Q(param_bram_addr[6]),
+        .R(1'b0));
+  FDRE \param_bram_addr_reg_reg[7] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(\axi_awaddr_reg_n_0_[9] ),
+        .Q(param_bram_addr[7]),
+        .R(1'b0));
+  FDRE \param_bram_addr_reg_reg[8] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(\axi_awaddr_reg_n_0_[10] ),
+        .Q(param_bram_addr[8]),
+        .R(1'b0));
+  FDRE \param_bram_addr_reg_reg[9] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(\axi_awaddr_reg_n_0_[11] ),
+        .Q(param_bram_addr[9]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[0] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[0]),
+        .Q(param_bram_data[0]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[10] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[10]),
+        .Q(param_bram_data[10]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[11] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[11]),
+        .Q(param_bram_data[11]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[12] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[12]),
+        .Q(param_bram_data[12]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[13] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[13]),
+        .Q(param_bram_data[13]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[14] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[14]),
+        .Q(param_bram_data[14]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[15] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[15]),
+        .Q(param_bram_data[15]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[16] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[16]),
+        .Q(param_bram_data[16]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[17] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[17]),
+        .Q(param_bram_data[17]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[18] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[18]),
+        .Q(param_bram_data[18]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[19] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[19]),
+        .Q(param_bram_data[19]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[1] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[1]),
+        .Q(param_bram_data[1]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[20] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[20]),
+        .Q(param_bram_data[20]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[21] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[21]),
+        .Q(param_bram_data[21]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[22] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[22]),
+        .Q(param_bram_data[22]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[23] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[23]),
+        .Q(param_bram_data[23]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[24] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[24]),
+        .Q(param_bram_data[24]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[25] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[25]),
+        .Q(param_bram_data[25]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[26] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[26]),
+        .Q(param_bram_data[26]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[27] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[27]),
+        .Q(param_bram_data[27]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[28] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[28]),
+        .Q(param_bram_data[28]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[29] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[29]),
+        .Q(param_bram_data[29]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[2] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[2]),
+        .Q(param_bram_data[2]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[30] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[30]),
+        .Q(param_bram_data[30]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[31] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[31]),
+        .Q(param_bram_data[31]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[3] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[3]),
+        .Q(param_bram_data[3]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[4] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[4]),
+        .Q(param_bram_data[4]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[5] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[5]),
+        .Q(param_bram_data[5]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[6] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[6]),
+        .Q(param_bram_data[6]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[7] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[7]),
+        .Q(param_bram_data[7]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[8] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[8]),
+        .Q(param_bram_data[8]),
+        .R(1'b0));
+  FDRE \param_bram_data_reg_reg[9] 
+       (.C(clk),
+        .CE(param_bram_wren),
+        .D(S_AXI_WDATA[9]),
+        .Q(param_bram_data[9]),
+        .R(1'b0));
+  LUT2 #(
+    .INIT(4'h2)) 
+    param_bram_wen_INST_0
+       (.I0(param_bram_wen_reg),
+        .I1(rst),
+        .O(param_bram_wen));
+  FDRE #(
+    .INIT(1'b0)) 
+    param_bram_wen_reg_reg
+       (.C(clk),
+        .CE(1'b1),
+        .D(param_bram_wren),
+        .Q(param_bram_wen_reg),
+        .R(1'b0));
   LUT4 #(
     .INIT(16'h0200)) 
     \slv_reg0[15]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(p_0_in[0]),
         .I3(S_AXI_WSTRB[1]),
-        .O(\slv_reg0[15]_i_1_n_0 ));
+        .O(p_1_in[15]));
+  (* SOFT_HLUTNM = "soft_lutpair1" *) 
+  LUT4 #(
+    .INIT(16'h8000)) 
+    \slv_reg0[15]_i_2 
+       (.I0(S_AXI_AWVALID),
+        .I1(S_AXI_WREADY),
+        .I2(S_AXI_AWREADY),
+        .I3(S_AXI_WVALID),
+        .O(slv_reg_wren__2));
   LUT4 #(
     .INIT(16'h0200)) 
     \slv_reg0[23]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(p_0_in[0]),
         .I3(S_AXI_WSTRB[2]),
-        .O(\slv_reg0[23]_i_1_n_0 ));
+        .O(p_1_in[23]));
   LUT4 #(
     .INIT(16'h0200)) 
     \slv_reg0[31]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(p_0_in[0]),
         .I3(S_AXI_WSTRB[3]),
-        .O(\slv_reg0[31]_i_1_n_0 ));
+        .O(p_1_in[31]));
   LUT4 #(
     .INIT(16'h0200)) 
     \slv_reg0[7]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(p_0_in[0]),
         .I3(S_AXI_WSTRB[0]),
-        .O(\slv_reg0[7]_i_1_n_0 ));
+        .O(p_1_in[7]));
   FDRE \slv_reg0_reg[0] 
        (.C(clk),
-        .CE(\slv_reg0[7]_i_1_n_0 ),
+        .CE(p_1_in[7]),
         .D(S_AXI_WDATA[0]),
-        .Q(slv_reg0[0]),
+        .Q(freq_mult[0]),
         .R(rst));
   FDRE \slv_reg0_reg[10] 
        (.C(clk),
-        .CE(\slv_reg0[15]_i_1_n_0 ),
+        .CE(p_1_in[15]),
         .D(S_AXI_WDATA[10]),
-        .Q(slv_reg0[10]),
+        .Q(freq_mult[10]),
         .R(rst));
   FDRE \slv_reg0_reg[11] 
        (.C(clk),
-        .CE(\slv_reg0[15]_i_1_n_0 ),
+        .CE(p_1_in[15]),
         .D(S_AXI_WDATA[11]),
-        .Q(slv_reg0[11]),
+        .Q(freq_mult[11]),
         .R(rst));
   FDRE \slv_reg0_reg[12] 
        (.C(clk),
-        .CE(\slv_reg0[15]_i_1_n_0 ),
+        .CE(p_1_in[15]),
         .D(S_AXI_WDATA[12]),
-        .Q(slv_reg0[12]),
+        .Q(freq_mult[12]),
         .R(rst));
   FDRE \slv_reg0_reg[13] 
        (.C(clk),
-        .CE(\slv_reg0[15]_i_1_n_0 ),
+        .CE(p_1_in[15]),
         .D(S_AXI_WDATA[13]),
-        .Q(slv_reg0[13]),
+        .Q(freq_mult[13]),
         .R(rst));
   FDRE \slv_reg0_reg[14] 
        (.C(clk),
-        .CE(\slv_reg0[15]_i_1_n_0 ),
+        .CE(p_1_in[15]),
         .D(S_AXI_WDATA[14]),
-        .Q(slv_reg0[14]),
+        .Q(freq_mult[14]),
         .R(rst));
   FDRE \slv_reg0_reg[15] 
        (.C(clk),
-        .CE(\slv_reg0[15]_i_1_n_0 ),
+        .CE(p_1_in[15]),
         .D(S_AXI_WDATA[15]),
-        .Q(slv_reg0[15]),
+        .Q(freq_mult[15]),
         .R(rst));
   FDRE \slv_reg0_reg[16] 
        (.C(clk),
-        .CE(\slv_reg0[23]_i_1_n_0 ),
+        .CE(p_1_in[23]),
         .D(S_AXI_WDATA[16]),
         .Q(slv_reg0[16]),
         .R(rst));
   FDRE \slv_reg0_reg[17] 
        (.C(clk),
-        .CE(\slv_reg0[23]_i_1_n_0 ),
+        .CE(p_1_in[23]),
         .D(S_AXI_WDATA[17]),
         .Q(slv_reg0[17]),
         .R(rst));
   FDRE \slv_reg0_reg[18] 
        (.C(clk),
-        .CE(\slv_reg0[23]_i_1_n_0 ),
+        .CE(p_1_in[23]),
         .D(S_AXI_WDATA[18]),
         .Q(slv_reg0[18]),
         .R(rst));
   FDRE \slv_reg0_reg[19] 
        (.C(clk),
-        .CE(\slv_reg0[23]_i_1_n_0 ),
+        .CE(p_1_in[23]),
         .D(S_AXI_WDATA[19]),
         .Q(slv_reg0[19]),
         .R(rst));
   FDRE \slv_reg0_reg[1] 
        (.C(clk),
-        .CE(\slv_reg0[7]_i_1_n_0 ),
+        .CE(p_1_in[7]),
         .D(S_AXI_WDATA[1]),
-        .Q(slv_reg0[1]),
+        .Q(freq_mult[1]),
         .R(rst));
   FDRE \slv_reg0_reg[20] 
        (.C(clk),
-        .CE(\slv_reg0[23]_i_1_n_0 ),
+        .CE(p_1_in[23]),
         .D(S_AXI_WDATA[20]),
         .Q(slv_reg0[20]),
         .R(rst));
   FDRE \slv_reg0_reg[21] 
        (.C(clk),
-        .CE(\slv_reg0[23]_i_1_n_0 ),
+        .CE(p_1_in[23]),
         .D(S_AXI_WDATA[21]),
         .Q(slv_reg0[21]),
         .R(rst));
   FDRE \slv_reg0_reg[22] 
        (.C(clk),
-        .CE(\slv_reg0[23]_i_1_n_0 ),
+        .CE(p_1_in[23]),
         .D(S_AXI_WDATA[22]),
         .Q(slv_reg0[22]),
         .R(rst));
   FDRE \slv_reg0_reg[23] 
        (.C(clk),
-        .CE(\slv_reg0[23]_i_1_n_0 ),
+        .CE(p_1_in[23]),
         .D(S_AXI_WDATA[23]),
         .Q(slv_reg0[23]),
         .R(rst));
   FDRE \slv_reg0_reg[24] 
        (.C(clk),
-        .CE(\slv_reg0[31]_i_1_n_0 ),
+        .CE(p_1_in[31]),
         .D(S_AXI_WDATA[24]),
         .Q(slv_reg0[24]),
         .R(rst));
   FDRE \slv_reg0_reg[25] 
        (.C(clk),
-        .CE(\slv_reg0[31]_i_1_n_0 ),
+        .CE(p_1_in[31]),
         .D(S_AXI_WDATA[25]),
         .Q(slv_reg0[25]),
         .R(rst));
   FDRE \slv_reg0_reg[26] 
        (.C(clk),
-        .CE(\slv_reg0[31]_i_1_n_0 ),
+        .CE(p_1_in[31]),
         .D(S_AXI_WDATA[26]),
         .Q(slv_reg0[26]),
         .R(rst));
   FDRE \slv_reg0_reg[27] 
        (.C(clk),
-        .CE(\slv_reg0[31]_i_1_n_0 ),
+        .CE(p_1_in[31]),
         .D(S_AXI_WDATA[27]),
         .Q(slv_reg0[27]),
         .R(rst));
   FDRE \slv_reg0_reg[28] 
        (.C(clk),
-        .CE(\slv_reg0[31]_i_1_n_0 ),
+        .CE(p_1_in[31]),
         .D(S_AXI_WDATA[28]),
         .Q(slv_reg0[28]),
         .R(rst));
   FDRE \slv_reg0_reg[29] 
        (.C(clk),
-        .CE(\slv_reg0[31]_i_1_n_0 ),
+        .CE(p_1_in[31]),
         .D(S_AXI_WDATA[29]),
         .Q(slv_reg0[29]),
         .R(rst));
   FDRE \slv_reg0_reg[2] 
        (.C(clk),
-        .CE(\slv_reg0[7]_i_1_n_0 ),
+        .CE(p_1_in[7]),
         .D(S_AXI_WDATA[2]),
-        .Q(slv_reg0[2]),
+        .Q(freq_mult[2]),
         .R(rst));
   FDRE \slv_reg0_reg[30] 
        (.C(clk),
-        .CE(\slv_reg0[31]_i_1_n_0 ),
+        .CE(p_1_in[31]),
         .D(S_AXI_WDATA[30]),
         .Q(slv_reg0[30]),
         .R(rst));
   FDRE \slv_reg0_reg[31] 
        (.C(clk),
-        .CE(\slv_reg0[31]_i_1_n_0 ),
+        .CE(p_1_in[31]),
         .D(S_AXI_WDATA[31]),
         .Q(slv_reg0[31]),
         .R(rst));
   FDRE \slv_reg0_reg[3] 
        (.C(clk),
-        .CE(\slv_reg0[7]_i_1_n_0 ),
+        .CE(p_1_in[7]),
         .D(S_AXI_WDATA[3]),
-        .Q(slv_reg0[3]),
+        .Q(freq_mult[3]),
         .R(rst));
   FDRE \slv_reg0_reg[4] 
        (.C(clk),
-        .CE(\slv_reg0[7]_i_1_n_0 ),
+        .CE(p_1_in[7]),
         .D(S_AXI_WDATA[4]),
-        .Q(slv_reg0[4]),
+        .Q(freq_mult[4]),
         .R(rst));
   FDRE \slv_reg0_reg[5] 
        (.C(clk),
-        .CE(\slv_reg0[7]_i_1_n_0 ),
+        .CE(p_1_in[7]),
         .D(S_AXI_WDATA[5]),
-        .Q(slv_reg0[5]),
+        .Q(freq_mult[5]),
         .R(rst));
   FDRE \slv_reg0_reg[6] 
        (.C(clk),
-        .CE(\slv_reg0[7]_i_1_n_0 ),
+        .CE(p_1_in[7]),
         .D(S_AXI_WDATA[6]),
-        .Q(slv_reg0[6]),
+        .Q(freq_mult[6]),
         .R(rst));
   FDRE \slv_reg0_reg[7] 
        (.C(clk),
-        .CE(\slv_reg0[7]_i_1_n_0 ),
+        .CE(p_1_in[7]),
         .D(S_AXI_WDATA[7]),
-        .Q(slv_reg0[7]),
+        .Q(freq_mult[7]),
         .R(rst));
   FDRE \slv_reg0_reg[8] 
        (.C(clk),
-        .CE(\slv_reg0[15]_i_1_n_0 ),
+        .CE(p_1_in[15]),
         .D(S_AXI_WDATA[8]),
-        .Q(slv_reg0[8]),
+        .Q(freq_mult[8]),
         .R(rst));
   FDRE \slv_reg0_reg[9] 
        (.C(clk),
-        .CE(\slv_reg0[15]_i_1_n_0 ),
+        .CE(p_1_in[15]),
         .D(S_AXI_WDATA[9]),
-        .Q(slv_reg0[9]),
+        .Q(freq_mult[9]),
         .R(rst));
   LUT4 #(
     .INIT(16'h2000)) 
     \slv_reg1[15]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(S_AXI_WSTRB[1]),
         .I3(p_0_in[0]),
@@ -1205,7 +1493,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   LUT4 #(
     .INIT(16'h2000)) 
     \slv_reg1[23]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(S_AXI_WSTRB[2]),
         .I3(p_0_in[0]),
@@ -1213,7 +1501,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   LUT4 #(
     .INIT(16'h2000)) 
     \slv_reg1[31]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(S_AXI_WSTRB[3]),
         .I3(p_0_in[0]),
@@ -1221,7 +1509,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   LUT4 #(
     .INIT(16'h2000)) 
     \slv_reg1[7]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(S_AXI_WSTRB[0]),
         .I3(p_0_in[0]),
@@ -1421,7 +1709,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   LUT4 #(
     .INIT(16'h0080)) 
     \slv_reg2[15]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(S_AXI_WSTRB[1]),
         .I3(p_0_in[0]),
@@ -1429,7 +1717,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   LUT4 #(
     .INIT(16'h0080)) 
     \slv_reg2[23]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(S_AXI_WSTRB[2]),
         .I3(p_0_in[0]),
@@ -1437,7 +1725,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   LUT4 #(
     .INIT(16'h0080)) 
     \slv_reg2[31]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(S_AXI_WSTRB[3]),
         .I3(p_0_in[0]),
@@ -1445,7 +1733,7 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   LUT4 #(
     .INIT(16'h0080)) 
     \slv_reg2[7]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(p_0_in[1]),
         .I2(S_AXI_WSTRB[0]),
         .I3(p_0_in[0]),
@@ -1645,233 +1933,224 @@ module top_multi_oscillator_axi_0_0_multi_oscillator_axi
   LUT4 #(
     .INIT(16'h8000)) 
     \slv_reg3[15]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(S_AXI_WSTRB[1]),
         .I2(p_0_in[0]),
         .I3(p_0_in[1]),
-        .O(p_1_in[15]));
+        .O(\slv_reg3[15]_i_1_n_0 ));
   LUT4 #(
     .INIT(16'h8000)) 
     \slv_reg3[23]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(S_AXI_WSTRB[2]),
         .I2(p_0_in[0]),
         .I3(p_0_in[1]),
-        .O(p_1_in[23]));
+        .O(\slv_reg3[23]_i_1_n_0 ));
   LUT4 #(
     .INIT(16'h8000)) 
     \slv_reg3[31]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(S_AXI_WSTRB[3]),
         .I2(p_0_in[0]),
         .I3(p_0_in[1]),
-        .O(p_1_in[31]));
-  (* SOFT_HLUTNM = "soft_lutpair1" *) 
-  LUT4 #(
-    .INIT(16'h8000)) 
-    \slv_reg3[31]_i_2 
-       (.I0(S_AXI_WREADY),
-        .I1(S_AXI_AWREADY),
-        .I2(S_AXI_AWVALID),
-        .I3(S_AXI_WVALID),
-        .O(slv_reg_wren__0));
+        .O(\slv_reg3[31]_i_1_n_0 ));
   LUT4 #(
     .INIT(16'h8000)) 
     \slv_reg3[7]_i_1 
-       (.I0(slv_reg_wren__0),
+       (.I0(slv_reg_wren__2),
         .I1(S_AXI_WSTRB[0]),
         .I2(p_0_in[0]),
         .I3(p_0_in[1]),
-        .O(p_1_in[7]));
+        .O(\slv_reg3[7]_i_1_n_0 ));
   FDRE \slv_reg3_reg[0] 
        (.C(clk),
-        .CE(p_1_in[7]),
+        .CE(\slv_reg3[7]_i_1_n_0 ),
         .D(S_AXI_WDATA[0]),
         .Q(slv_reg3[0]),
         .R(rst));
   FDRE \slv_reg3_reg[10] 
        (.C(clk),
-        .CE(p_1_in[15]),
+        .CE(\slv_reg3[15]_i_1_n_0 ),
         .D(S_AXI_WDATA[10]),
         .Q(slv_reg3[10]),
         .R(rst));
   FDRE \slv_reg3_reg[11] 
        (.C(clk),
-        .CE(p_1_in[15]),
+        .CE(\slv_reg3[15]_i_1_n_0 ),
         .D(S_AXI_WDATA[11]),
         .Q(slv_reg3[11]),
         .R(rst));
   FDRE \slv_reg3_reg[12] 
        (.C(clk),
-        .CE(p_1_in[15]),
+        .CE(\slv_reg3[15]_i_1_n_0 ),
         .D(S_AXI_WDATA[12]),
         .Q(slv_reg3[12]),
         .R(rst));
   FDRE \slv_reg3_reg[13] 
        (.C(clk),
-        .CE(p_1_in[15]),
+        .CE(\slv_reg3[15]_i_1_n_0 ),
         .D(S_AXI_WDATA[13]),
         .Q(slv_reg3[13]),
         .R(rst));
   FDRE \slv_reg3_reg[14] 
        (.C(clk),
-        .CE(p_1_in[15]),
+        .CE(\slv_reg3[15]_i_1_n_0 ),
         .D(S_AXI_WDATA[14]),
         .Q(slv_reg3[14]),
         .R(rst));
   FDRE \slv_reg3_reg[15] 
        (.C(clk),
-        .CE(p_1_in[15]),
+        .CE(\slv_reg3[15]_i_1_n_0 ),
         .D(S_AXI_WDATA[15]),
         .Q(slv_reg3[15]),
         .R(rst));
   FDRE \slv_reg3_reg[16] 
        (.C(clk),
-        .CE(p_1_in[23]),
+        .CE(\slv_reg3[23]_i_1_n_0 ),
         .D(S_AXI_WDATA[16]),
         .Q(slv_reg3[16]),
         .R(rst));
   FDRE \slv_reg3_reg[17] 
        (.C(clk),
-        .CE(p_1_in[23]),
+        .CE(\slv_reg3[23]_i_1_n_0 ),
         .D(S_AXI_WDATA[17]),
         .Q(slv_reg3[17]),
         .R(rst));
   FDRE \slv_reg3_reg[18] 
        (.C(clk),
-        .CE(p_1_in[23]),
+        .CE(\slv_reg3[23]_i_1_n_0 ),
         .D(S_AXI_WDATA[18]),
         .Q(slv_reg3[18]),
         .R(rst));
   FDRE \slv_reg3_reg[19] 
        (.C(clk),
-        .CE(p_1_in[23]),
+        .CE(\slv_reg3[23]_i_1_n_0 ),
         .D(S_AXI_WDATA[19]),
         .Q(slv_reg3[19]),
         .R(rst));
   FDRE \slv_reg3_reg[1] 
        (.C(clk),
-        .CE(p_1_in[7]),
+        .CE(\slv_reg3[7]_i_1_n_0 ),
         .D(S_AXI_WDATA[1]),
         .Q(slv_reg3[1]),
         .R(rst));
   FDRE \slv_reg3_reg[20] 
        (.C(clk),
-        .CE(p_1_in[23]),
+        .CE(\slv_reg3[23]_i_1_n_0 ),
         .D(S_AXI_WDATA[20]),
         .Q(slv_reg3[20]),
         .R(rst));
   FDRE \slv_reg3_reg[21] 
        (.C(clk),
-        .CE(p_1_in[23]),
+        .CE(\slv_reg3[23]_i_1_n_0 ),
         .D(S_AXI_WDATA[21]),
         .Q(slv_reg3[21]),
         .R(rst));
   FDRE \slv_reg3_reg[22] 
        (.C(clk),
-        .CE(p_1_in[23]),
+        .CE(\slv_reg3[23]_i_1_n_0 ),
         .D(S_AXI_WDATA[22]),
         .Q(slv_reg3[22]),
         .R(rst));
   FDRE \slv_reg3_reg[23] 
        (.C(clk),
-        .CE(p_1_in[23]),
+        .CE(\slv_reg3[23]_i_1_n_0 ),
         .D(S_AXI_WDATA[23]),
         .Q(slv_reg3[23]),
         .R(rst));
   FDRE \slv_reg3_reg[24] 
        (.C(clk),
-        .CE(p_1_in[31]),
+        .CE(\slv_reg3[31]_i_1_n_0 ),
         .D(S_AXI_WDATA[24]),
         .Q(slv_reg3[24]),
         .R(rst));
   FDRE \slv_reg3_reg[25] 
        (.C(clk),
-        .CE(p_1_in[31]),
+        .CE(\slv_reg3[31]_i_1_n_0 ),
         .D(S_AXI_WDATA[25]),
         .Q(slv_reg3[25]),
         .R(rst));
   FDRE \slv_reg3_reg[26] 
        (.C(clk),
-        .CE(p_1_in[31]),
+        .CE(\slv_reg3[31]_i_1_n_0 ),
         .D(S_AXI_WDATA[26]),
         .Q(slv_reg3[26]),
         .R(rst));
   FDRE \slv_reg3_reg[27] 
        (.C(clk),
-        .CE(p_1_in[31]),
+        .CE(\slv_reg3[31]_i_1_n_0 ),
         .D(S_AXI_WDATA[27]),
         .Q(slv_reg3[27]),
         .R(rst));
   FDRE \slv_reg3_reg[28] 
        (.C(clk),
-        .CE(p_1_in[31]),
+        .CE(\slv_reg3[31]_i_1_n_0 ),
         .D(S_AXI_WDATA[28]),
         .Q(slv_reg3[28]),
         .R(rst));
   FDRE \slv_reg3_reg[29] 
        (.C(clk),
-        .CE(p_1_in[31]),
+        .CE(\slv_reg3[31]_i_1_n_0 ),
         .D(S_AXI_WDATA[29]),
         .Q(slv_reg3[29]),
         .R(rst));
   FDRE \slv_reg3_reg[2] 
        (.C(clk),
-        .CE(p_1_in[7]),
+        .CE(\slv_reg3[7]_i_1_n_0 ),
         .D(S_AXI_WDATA[2]),
         .Q(slv_reg3[2]),
         .R(rst));
   FDRE \slv_reg3_reg[30] 
        (.C(clk),
-        .CE(p_1_in[31]),
+        .CE(\slv_reg3[31]_i_1_n_0 ),
         .D(S_AXI_WDATA[30]),
         .Q(slv_reg3[30]),
         .R(rst));
   FDRE \slv_reg3_reg[31] 
        (.C(clk),
-        .CE(p_1_in[31]),
+        .CE(\slv_reg3[31]_i_1_n_0 ),
         .D(S_AXI_WDATA[31]),
         .Q(slv_reg3[31]),
         .R(rst));
   FDRE \slv_reg3_reg[3] 
        (.C(clk),
-        .CE(p_1_in[7]),
+        .CE(\slv_reg3[7]_i_1_n_0 ),
         .D(S_AXI_WDATA[3]),
         .Q(slv_reg3[3]),
         .R(rst));
   FDRE \slv_reg3_reg[4] 
        (.C(clk),
-        .CE(p_1_in[7]),
+        .CE(\slv_reg3[7]_i_1_n_0 ),
         .D(S_AXI_WDATA[4]),
         .Q(slv_reg3[4]),
         .R(rst));
   FDRE \slv_reg3_reg[5] 
        (.C(clk),
-        .CE(p_1_in[7]),
+        .CE(\slv_reg3[7]_i_1_n_0 ),
         .D(S_AXI_WDATA[5]),
         .Q(slv_reg3[5]),
         .R(rst));
   FDRE \slv_reg3_reg[6] 
        (.C(clk),
-        .CE(p_1_in[7]),
+        .CE(\slv_reg3[7]_i_1_n_0 ),
         .D(S_AXI_WDATA[6]),
         .Q(slv_reg3[6]),
         .R(rst));
   FDRE \slv_reg3_reg[7] 
        (.C(clk),
-        .CE(p_1_in[7]),
+        .CE(\slv_reg3[7]_i_1_n_0 ),
         .D(S_AXI_WDATA[7]),
         .Q(slv_reg3[7]),
         .R(rst));
   FDRE \slv_reg3_reg[8] 
        (.C(clk),
-        .CE(p_1_in[15]),
+        .CE(\slv_reg3[15]_i_1_n_0 ),
         .D(S_AXI_WDATA[8]),
         .Q(slv_reg3[8]),
         .R(rst));
   FDRE \slv_reg3_reg[9] 
        (.C(clk),
-        .CE(p_1_in[15]),
+        .CE(\slv_reg3[15]_i_1_n_0 ),
         .D(S_AXI_WDATA[9]),
         .Q(slv_reg3[9]),
         .R(rst));
