@@ -1,10 +1,10 @@
 // Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
-// Date        : Sun Nov 22 14:37:44 2020
+// Date        : Tue Nov 24 01:13:33 2020
 // Host        : DESKTOP-VU7H966 running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode synth_stub
-//               d:/Repos/artysynth-clean/vivado/synth_hw/synth_hw.srcs/sources_1/bd/top/ip/top_lmb_bram_2/top_lmb_bram_2_stub.v
+// Command     : write_verilog -force -mode synth_stub -rename_top top_lmb_bram_2 -prefix
+//               top_lmb_bram_2_ top_lmb_bram_2_stub.v
 // Design      : top_lmb_bram_2
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7a35ticsg324-1L

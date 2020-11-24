@@ -21,27 +21,33 @@
 
 
 module state_fifo # (
-    parameter integer WIDTH = 32
+    parameter integer WIDTH = 64
 )(
     output [WIDTH-1:0] prev_state,
     input [WIDTH-1:0] next_state,
     input clk,
-    input rstn, // Active low reset
-    output ready, // FIFO has been initialized
+    input rst,
+    input en,
+    
+    output out_rst,
     
     // State FIFO ports
     input wire state_fifo_prog_full,
-    output [63:0] state_fifo_dout,  //
-    input [63:0] state_fifo_din,
+    output [WIDTH-1:0] state_fifo_dout,  //
+    input [WIDTH-1:0] state_fifo_din,
     output wire state_fifo_wr_en,   //
     output wire state_fifo_rd_en,   //
-    input wire state_fifo_valid,
-    output wire state_fifo_rst      //
+    input wire state_fifo_valid
 );
-    assign ready = state_fifo_valid;
-    assign state_fifo_rst = ~rstn;
-    assign state_fifo_wr_en = rstn;
-    assign state_fifo_rd_en = state_fifo_prog_full && rstn;
-    assign state_fifo_dout = ready ? next_state : 0;
-    assign prev_state = ready ? state_fifo_din : 0;
+    reg out_rst_reg = 1;
+    assign out_rst = rst || out_rst_reg;
+    
+    always @(posedge clk)
+        if (~rst && state_fifo_prog_full) 
+            out_rst_reg = 0;
+
+    assign state_fifo_wr_en = (en || ~state_fifo_prog_full) && ~rst;
+    assign state_fifo_rd_en = en && state_fifo_prog_full && ~rst;
+    assign state_fifo_dout = ~state_fifo_prog_full ? 0 : next_state;
+    assign prev_state = state_fifo_valid ? 0 : state_fifo_din;
 endmodule

@@ -40,7 +40,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# multi_oscillator_top
+# multi_oscillator_accum, multi_oscillator_axi, state_fifo
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -129,13 +129,176 @@ if { $nRet != 0 } {
 ##################################################################
 
 
-# Hierarchical cell: cpu_fmem
-proc create_hier_cell_cpu_fmem { parentCell nameHier } {
+# Hierarchical cell: multi_oscillator
+proc create_hier_cell_multi_oscillator { parentCell nameHier } {
 
   variable script_folder
 
   if { $parentCell eq "" || $nameHier eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_cpu_fmem() - Empty argument(s)!"}
+     catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_multi_oscillator() - Empty argument(s)!"}
+     return
+  }
+
+  # Get object for parentCell
+  set parentObj [get_bd_cells $parentCell]
+  if { $parentObj == "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2090 -severity "ERROR" "Unable to find parent cell <$parentCell>!"}
+     return
+  }
+
+  # Make sure parentObj is hier blk
+  set parentType [get_property TYPE $parentObj]
+  if { $parentType ne "hier" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2091 -severity "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
+     return
+  }
+
+  # Save current instance; Restore later
+  set oldCurInst [current_bd_instance .]
+
+  # Set parent object as current
+  current_bd_instance $parentObj
+
+  # Create cell and set as current instance
+  set hier_obj [create_bd_cell -type hier $nameHier]
+  current_bd_instance $hier_obj
+
+  # Create interface pins
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_AXI
+
+
+  # Create pins
+  create_bd_pin -dir I -type clk clk
+  create_bd_pin -dir O -from 15 -to 0 osc_amp
+  create_bd_pin -dir O -from 8 -to 0 osc_index
+  create_bd_pin -dir O -from 15 -to 0 osc_ontime
+  create_bd_pin -dir O -from 31 -to 0 osc_phase
+  create_bd_pin -dir I -type rst rst
+
+  # Create instance: accumulator, and set properties
+  set block_name multi_oscillator_accum
+  set block_cell_name accumulator
+  if { [catch {set accumulator [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $accumulator eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: axi_controller, and set properties
+  set block_name multi_oscillator_axi
+  set block_cell_name axi_controller
+  if { [catch {set axi_controller [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $axi_controller eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: param_bram, and set properties
+  set param_bram [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 param_bram ]
+  set_property -dict [ list \
+   CONFIG.Assume_Synchronous_Clk {true} \
+   CONFIG.Byte_Size {9} \
+   CONFIG.EN_SAFETY_CKT {false} \
+   CONFIG.Enable_32bit_Address {false} \
+   CONFIG.Enable_A {Always_Enabled} \
+   CONFIG.Enable_B {Always_Enabled} \
+   CONFIG.Memory_Type {Simple_Dual_Port_RAM} \
+   CONFIG.Operating_Mode_A {WRITE_FIRST} \
+   CONFIG.Operating_Mode_B {READ_FIRST} \
+   CONFIG.Port_B_Clock {100} \
+   CONFIG.Port_B_Enable_Rate {100} \
+   CONFIG.Port_B_Write_Rate {0} \
+   CONFIG.Read_Width_B {64} \
+   CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
+   CONFIG.Register_PortB_Output_of_Memory_Primitives {true} \
+   CONFIG.Use_Byte_Write_Enable {false} \
+   CONFIG.Use_RSTA_Pin {false} \
+   CONFIG.Use_RSTB_Pin {true} \
+   CONFIG.Write_Depth_A {1024} \
+   CONFIG.Write_Width_B {64} \
+   CONFIG.use_bram_block {Stand_Alone} \
+ ] $param_bram
+
+  # Create instance: state_fifo, and set properties
+  set state_fifo [ create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.2 state_fifo ]
+  set_property -dict [ list \
+   CONFIG.Data_Count_Width {9} \
+   CONFIG.Fifo_Implementation {Common_Clock_Builtin_FIFO} \
+   CONFIG.Full_Threshold_Assert_Value {500} \
+   CONFIG.Full_Threshold_Negate_Value {499} \
+   CONFIG.Input_Data_Width {64} \
+   CONFIG.Input_Depth {512} \
+   CONFIG.Output_Data_Width {64} \
+   CONFIG.Output_Depth {512} \
+   CONFIG.Programmable_Full_Type {Single_Programmable_Full_Threshold_Constant} \
+   CONFIG.Read_Data_Count_Width {9} \
+   CONFIG.Reset_Type {Asynchronous_Reset} \
+   CONFIG.Use_Dout_Reset {false} \
+   CONFIG.Valid_Flag {true} \
+   CONFIG.Write_Data_Count_Width {9} \
+ ] $state_fifo
+
+  # Create instance: state_fifo_controller, and set properties
+  set block_name state_fifo
+  set block_cell_name state_fifo_controller
+  if { [catch {set state_fifo_controller [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $state_fifo_controller eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  set_property -dict [ list \
+   CONFIG.POLARITY {ACTIVE_HIGH} \
+ ] [get_bd_pins /multi_oscillator/state_fifo_controller/out_rst]
+
+  set_property -dict [ list \
+   CONFIG.POLARITY {ACTIVE_HIGH} \
+ ] [get_bd_pins /multi_oscillator/state_fifo_controller/rst]
+
+  # Create interface connections
+  connect_bd_intf_net -intf_net S_AXI_1 [get_bd_intf_pins S_AXI] [get_bd_intf_pins axi_controller/S_AXI]
+
+  # Create port connections
+  connect_bd_net -net axi_controller_freq_bram_wen [get_bd_pins axi_controller/freq_bram_wen] [get_bd_pins param_bram/wea]
+  connect_bd_net -net axi_controller_freq_mult [get_bd_pins accumulator/freq_mult] [get_bd_pins axi_controller/freq_mult]
+  connect_bd_net -net axi_controller_param_bram_addr [get_bd_pins axi_controller/param_bram_addr] [get_bd_pins param_bram/addra]
+  connect_bd_net -net axi_controller_param_bram_data [get_bd_pins axi_controller/param_bram_data] [get_bd_pins param_bram/dina]
+  connect_bd_net -net axi_controller_vibrato [get_bd_pins accumulator/vibrato] [get_bd_pins axi_controller/vibrato]
+  connect_bd_net -net blk_mem_gen_0_doutb [get_bd_pins accumulator/param_bram_data] [get_bd_pins param_bram/doutb]
+  connect_bd_net -net clk_1 [get_bd_pins clk] [get_bd_pins accumulator/clk] [get_bd_pins axi_controller/clk] [get_bd_pins param_bram/clka] [get_bd_pins param_bram/clkb] [get_bd_pins state_fifo/clk] [get_bd_pins state_fifo_controller/clk]
+  connect_bd_net -net fifo_generator_0_dout [get_bd_pins state_fifo/dout] [get_bd_pins state_fifo_controller/state_fifo_din]
+  connect_bd_net -net fifo_generator_0_prog_full [get_bd_pins state_fifo/prog_full] [get_bd_pins state_fifo_controller/state_fifo_prog_full]
+  connect_bd_net -net fifo_generator_0_valid [get_bd_pins state_fifo/valid] [get_bd_pins state_fifo_controller/state_fifo_valid]
+  connect_bd_net -net multi_oscillator_acc_0_next_state [get_bd_pins accumulator/next_state] [get_bd_pins state_fifo_controller/next_state]
+  connect_bd_net -net multi_oscillator_acc_0_osc_amp [get_bd_pins osc_amp] [get_bd_pins accumulator/osc_amp]
+  connect_bd_net -net multi_oscillator_acc_0_osc_index [get_bd_pins osc_index] [get_bd_pins accumulator/osc_index]
+  connect_bd_net -net multi_oscillator_acc_0_osc_ontime [get_bd_pins osc_ontime] [get_bd_pins accumulator/osc_ontime]
+  connect_bd_net -net multi_oscillator_acc_0_osc_phase [get_bd_pins osc_phase] [get_bd_pins accumulator/osc_phase]
+  connect_bd_net -net multi_oscillator_acc_0_param_bram_addr [get_bd_pins accumulator/param_bram_addr] [get_bd_pins param_bram/addrb]
+  connect_bd_net -net multi_oscillator_acc_0_state_fifo_en [get_bd_pins accumulator/state_fifo_en] [get_bd_pins state_fifo_controller/en]
+  connect_bd_net -net rst_1 [get_bd_pins rst] [get_bd_pins accumulator/rst] [get_bd_pins axi_controller/rst] [get_bd_pins param_bram/rstb] [get_bd_pins state_fifo/rst] [get_bd_pins state_fifo_controller/rst]
+  connect_bd_net -net state_fifo_0_prev_state [get_bd_pins accumulator/prev_state] [get_bd_pins state_fifo_controller/prev_state]
+  connect_bd_net -net state_fifo_0_state_fifo_dout [get_bd_pins state_fifo/din] [get_bd_pins state_fifo_controller/state_fifo_dout]
+  connect_bd_net -net state_fifo_0_state_fifo_rd_en [get_bd_pins state_fifo/rd_en] [get_bd_pins state_fifo_controller/state_fifo_rd_en]
+  connect_bd_net -net state_fifo_0_state_fifo_wr_en [get_bd_pins state_fifo/wr_en] [get_bd_pins state_fifo_controller/state_fifo_wr_en]
+
+  # Restore current instance
+  current_bd_instance $oldCurInst
+}
+
+# Hierarchical cell: cpu_mem
+proc create_hier_cell_cpu_mem { parentCell nameHier } {
+
+  variable script_folder
+
+  if { $parentCell eq "" || $nameHier eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_cpu_mem() - Empty argument(s)!"}
      return
   }
 
@@ -281,13 +444,19 @@ proc create_root_design { parentCell } {
    CONFIG.C_DIV_ZERO_EXCEPTION {1} \
    CONFIG.C_D_AXI {1} \
    CONFIG.C_D_LMB {1} \
+   CONFIG.C_ENABLE_DISCRETE_PORTS {0} \
    CONFIG.C_I_LMB {1} \
+   CONFIG.C_M_AXI_D_BUS_EXCEPTION {0} \
+   CONFIG.C_NUMBER_OF_PC_BRK {4} \
+   CONFIG.C_NUMBER_OF_RD_ADDR_BRK {2} \
+   CONFIG.C_NUMBER_OF_WR_ADDR_BRK {2} \
    CONFIG.C_UNALIGNED_EXCEPTIONS {0} \
+   CONFIG.C_USE_BARREL {1} \
    CONFIG.C_USE_BRANCH_TARGET_CACHE {1} \
    CONFIG.C_USE_DCACHE {0} \
    CONFIG.C_USE_DIV {1} \
    CONFIG.C_USE_FPU {0} \
-   CONFIG.C_USE_HW_MUL {1} \
+   CONFIG.C_USE_HW_MUL {2} \
    CONFIG.C_USE_ICACHE {0} \
    CONFIG.C_USE_MSR_INSTR {0} \
    CONFIG.G_USE_EXCEPTIONS {1} \
@@ -298,24 +467,15 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.ENABLE_ADVANCED_OPTIONS {0} \
    CONFIG.M00_HAS_REGSLICE {0} \
-   CONFIG.NUM_MI {2} \
+   CONFIG.NUM_MI {1} \
    CONFIG.NUM_SI {1} \
  ] $cpu_axi_periph
 
   # Create instance: cpu_debug, and set properties
   set cpu_debug [ create_bd_cell -type ip -vlnv xilinx.com:ip:mdm:3.2 cpu_debug ]
 
-  # Create instance: cpu_fmem
-  create_hier_cell_cpu_fmem [current_bd_instance .] cpu_fmem
-
-  # Create instance: cpu_freq_bram_axi, and set properties
-  set cpu_freq_bram_axi [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_bram_ctrl:4.1 cpu_freq_bram_axi ]
-  set_property -dict [ list \
-   CONFIG.DATA_WIDTH {32} \
-   CONFIG.ECC_TYPE {0} \
-   CONFIG.PROTOCOL {AXI4LITE} \
-   CONFIG.SINGLE_PORT_BRAM {1} \
- ] $cpu_freq_bram_axi
+  # Create instance: cpu_mem
+  create_hier_cell_cpu_mem [current_bd_instance .] cpu_mem
 
   # Create instance: cpu_rst, and set properties
   set cpu_rst [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 cpu_rst ]
@@ -324,101 +484,31 @@ proc create_root_design { parentCell } {
    CONFIG.USE_BOARD_FLOW {true} \
  ] $cpu_rst
 
-  # Create instance: freq_bram, and set properties
-  set freq_bram [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 freq_bram ]
-  set_property -dict [ list \
-   CONFIG.Assume_Synchronous_Clk {true} \
-   CONFIG.Byte_Size {8} \
-   CONFIG.EN_SAFETY_CKT {false} \
-   CONFIG.Enable_32bit_Address {true} \
-   CONFIG.Enable_B {Always_Enabled} \
-   CONFIG.Memory_Type {Simple_Dual_Port_RAM} \
-   CONFIG.Operating_Mode_A {WRITE_FIRST} \
-   CONFIG.Operating_Mode_B {READ_FIRST} \
-   CONFIG.Port_B_Clock {100} \
-   CONFIG.Port_B_Enable_Rate {100} \
-   CONFIG.Port_B_Write_Rate {0} \
-   CONFIG.Read_Width_A {32} \
-   CONFIG.Read_Width_B {32} \
-   CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
-   CONFIG.Register_PortB_Output_of_Memory_Primitives {true} \
-   CONFIG.Use_Byte_Write_Enable {true} \
-   CONFIG.Use_RSTA_Pin {false} \
-   CONFIG.Use_RSTB_Pin {false} \
-   CONFIG.Write_Depth_A {512} \
-   CONFIG.Write_Width_A {32} \
-   CONFIG.Write_Width_B {32} \
-   CONFIG.use_bram_block {Stand_Alone} \
- ] $freq_bram
-
-  # Create instance: multi_oscillator, and set properties
-  set block_name multi_oscillator_top
-  set block_cell_name multi_oscillator
-  if { [catch {set multi_oscillator [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $multi_oscillator eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-  
-  # Create instance: osc_state_fifo, and set properties
-  set osc_state_fifo [ create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.2 osc_state_fifo ]
-  set_property -dict [ list \
-   CONFIG.Data_Count_Width {9} \
-   CONFIG.Fifo_Implementation {Common_Clock_Builtin_FIFO} \
-   CONFIG.Full_Threshold_Assert_Value {510} \
-   CONFIG.Full_Threshold_Negate_Value {509} \
-   CONFIG.Input_Data_Width {64} \
-   CONFIG.Input_Depth {512} \
-   CONFIG.Output_Data_Width {64} \
-   CONFIG.Output_Depth {512} \
-   CONFIG.Programmable_Empty_Type {No_Programmable_Empty_Threshold} \
-   CONFIG.Programmable_Full_Type {Single_Programmable_Full_Threshold_Constant} \
-   CONFIG.Read_Data_Count_Width {9} \
-   CONFIG.Reset_Type {Asynchronous_Reset} \
-   CONFIG.Use_Dout_Reset {false} \
-   CONFIG.Use_Embedded_Registers {false} \
-   CONFIG.Valid_Flag {false} \
-   CONFIG.Write_Acknowledge_Flag {false} \
-   CONFIG.Write_Data_Count_Width {9} \
- ] $osc_state_fifo
+  # Create instance: multi_oscillator
+  create_hier_cell_multi_oscillator [current_bd_instance .] multi_oscillator
 
   # Create interface connections
   connect_bd_intf_net -intf_net cpu_M_AXI_DP [get_bd_intf_pins cpu/M_AXI_DP] [get_bd_intf_pins cpu_axi_periph/S00_AXI]
-  connect_bd_intf_net -intf_net cpu_axi_periph_M00_AXI [get_bd_intf_pins cpu_axi_periph/M00_AXI] [get_bd_intf_pins cpu_freq_bram_axi/S_AXI]
-  connect_bd_intf_net -intf_net cpu_axi_periph_M01_AXI [get_bd_intf_pins cpu_axi_periph/M01_AXI] [get_bd_intf_pins multi_oscillator/ctrl_axi]
-  connect_bd_intf_net -intf_net cpu_freq_bram_axi_BRAM_PORTA [get_bd_intf_pins cpu_freq_bram_axi/BRAM_PORTA] [get_bd_intf_pins freq_bram/BRAM_PORTA]
+  connect_bd_intf_net -intf_net cpu_axi_periph_M00_AXI [get_bd_intf_pins cpu_axi_periph/M00_AXI] [get_bd_intf_pins multi_oscillator/S_AXI]
   connect_bd_intf_net -intf_net microblaze_0_debug [get_bd_intf_pins cpu/DEBUG] [get_bd_intf_pins cpu_debug/MBDEBUG_0]
-  connect_bd_intf_net -intf_net microblaze_0_dlmb_1 [get_bd_intf_pins cpu/DLMB] [get_bd_intf_pins cpu_fmem/DLMB]
-  connect_bd_intf_net -intf_net microblaze_0_ilmb_1 [get_bd_intf_pins cpu/ILMB] [get_bd_intf_pins cpu_fmem/ILMB]
+  connect_bd_intf_net -intf_net microblaze_0_dlmb_1 [get_bd_intf_pins cpu/DLMB] [get_bd_intf_pins cpu_mem/DLMB]
+  connect_bd_intf_net -intf_net microblaze_0_ilmb_1 [get_bd_intf_pins cpu/ILMB] [get_bd_intf_pins cpu_mem/ILMB]
 
   # Create port connections
-  connect_bd_net -net blk_mem_gen_0_doutb [get_bd_pins freq_bram/doutb] [get_bd_pins multi_oscillator/freq_bram_rddata]
   connect_bd_net -net clk_locked [get_bd_pins clk/locked] [get_bd_pins cpu_rst/dcm_locked]
-  connect_bd_net -net cpu_rst_interconnect_aresetn [get_bd_pins cpu_axi_periph/ARESETN] [get_bd_pins cpu_rst/interconnect_aresetn]
-  connect_bd_net -net cpu_rst_peripheral_aresetn [get_bd_pins cpu_axi_periph/M00_ARESETN] [get_bd_pins cpu_axi_periph/M01_ARESETN] [get_bd_pins cpu_axi_periph/S00_ARESETN] [get_bd_pins cpu_freq_bram_axi/s_axi_aresetn] [get_bd_pins cpu_rst/peripheral_aresetn] [get_bd_pins multi_oscillator/ctrl_axi_aresetn]
+  connect_bd_net -net cpu_rst_interconnect_aresetn [get_bd_pins cpu_axi_periph/ARESETN] [get_bd_pins cpu_axi_periph/M00_ARESETN] [get_bd_pins cpu_axi_periph/S00_ARESETN] [get_bd_pins cpu_rst/interconnect_aresetn]
+  connect_bd_net -net cpu_rst_peripheral_reset [get_bd_pins cpu_rst/peripheral_reset] [get_bd_pins multi_oscillator/rst]
   connect_bd_net -net mdm_1_debug_sys_rst [get_bd_pins cpu_debug/Debug_SYS_Rst] [get_bd_pins cpu_rst/mb_debug_sys_rst]
-  connect_bd_net -net microblaze_0_Clk [get_bd_pins clk/clk_out1] [get_bd_pins cpu/Clk] [get_bd_pins cpu_axi_periph/ACLK] [get_bd_pins cpu_axi_periph/M00_ACLK] [get_bd_pins cpu_axi_periph/M01_ACLK] [get_bd_pins cpu_axi_periph/S00_ACLK] [get_bd_pins cpu_fmem/LMB_Clk] [get_bd_pins cpu_freq_bram_axi/s_axi_aclk] [get_bd_pins cpu_rst/slowest_sync_clk] [get_bd_pins freq_bram/clkb] [get_bd_pins multi_oscillator/ctrl_axi_aclk] [get_bd_pins osc_state_fifo/clk]
-  connect_bd_net -net multi_oscillator_bram_addr [get_bd_pins freq_bram/addrb] [get_bd_pins multi_oscillator/freq_bram_addr]
-  connect_bd_net -net multi_oscillator_state_fifo_dout [get_bd_pins multi_oscillator/state_fifo_dout] [get_bd_pins osc_state_fifo/din]
-  connect_bd_net -net multi_oscillator_state_fifo_rd_en [get_bd_pins multi_oscillator/state_fifo_rd_en] [get_bd_pins osc_state_fifo/rd_en]
-  connect_bd_net -net multi_oscillator_state_fifo_rst [get_bd_pins multi_oscillator/state_fifo_rst] [get_bd_pins osc_state_fifo/rst]
-  connect_bd_net -net multi_oscillator_state_fifo_wr_en [get_bd_pins multi_oscillator/state_fifo_wr_en] [get_bd_pins osc_state_fifo/wr_en]
-  connect_bd_net -net osc_state_fifo_dout [get_bd_pins multi_oscillator/state_fifo_din] [get_bd_pins osc_state_fifo/dout]
-  connect_bd_net -net osc_state_fifo_empty [get_bd_pins multi_oscillator/state_fifo_empty] [get_bd_pins osc_state_fifo/empty]
-  connect_bd_net -net osc_state_fifo_full [get_bd_pins multi_oscillator/state_fifo_full] [get_bd_pins osc_state_fifo/full]
-  connect_bd_net -net osc_state_fifo_prog_full [get_bd_pins multi_oscillator/state_fifo_prog_full] [get_bd_pins osc_state_fifo/prog_full]
+  connect_bd_net -net microblaze_0_Clk [get_bd_pins clk/clk_out1] [get_bd_pins cpu/Clk] [get_bd_pins cpu_axi_periph/ACLK] [get_bd_pins cpu_axi_periph/M00_ACLK] [get_bd_pins cpu_axi_periph/S00_ACLK] [get_bd_pins cpu_mem/LMB_Clk] [get_bd_pins cpu_rst/slowest_sync_clk] [get_bd_pins multi_oscillator/clk]
   connect_bd_net -net reset_0_1 [get_bd_ports reset] [get_bd_pins clk/resetn] [get_bd_pins cpu_rst/ext_reset_in]
-  connect_bd_net -net rst_clk_100M_bus_struct_reset [get_bd_pins cpu_fmem/SYS_Rst] [get_bd_pins cpu_rst/bus_struct_reset]
+  connect_bd_net -net rst_clk_100M_bus_struct_reset [get_bd_pins cpu_mem/SYS_Rst] [get_bd_pins cpu_rst/bus_struct_reset]
   connect_bd_net -net rst_clk_100M_mb_reset [get_bd_pins cpu/Reset] [get_bd_pins cpu_rst/mb_reset]
   connect_bd_net -net sys_clock_1 [get_bd_ports sys_clock] [get_bd_pins clk/clk_in1]
 
   # Create address segments
-  assign_bd_address -offset 0xC0000000 -range 0x00002000 -target_address_space [get_bd_addr_spaces cpu/Data] [get_bd_addr_segs cpu_freq_bram_axi/S_AXI/Mem0] -force
-  assign_bd_address -offset 0x00000000 -range 0x00008000 -target_address_space [get_bd_addr_spaces cpu/Data] [get_bd_addr_segs cpu_fmem/dlmb_bram_if_cntlr/SLMB/Mem] -force
-  assign_bd_address -offset 0x00000000 -range 0x00008000 -target_address_space [get_bd_addr_spaces cpu/Instruction] [get_bd_addr_segs cpu_fmem/ilmb_bram_if_cntlr/SLMB/Mem] -force
-  assign_bd_address -offset 0x44A00000 -range 0x00010000 -target_address_space [get_bd_addr_spaces cpu/Data] [get_bd_addr_segs multi_oscillator/ctrl_axi/reg0] -force
+  assign_bd_address -offset 0x00000000 -range 0x00008000 -target_address_space [get_bd_addr_spaces cpu/Data] [get_bd_addr_segs cpu_mem/dlmb_bram_if_cntlr/SLMB/Mem] -force
+  assign_bd_address -offset 0x00000000 -range 0x00008000 -target_address_space [get_bd_addr_spaces cpu/Instruction] [get_bd_addr_segs cpu_mem/ilmb_bram_if_cntlr/SLMB/Mem] -force
+  assign_bd_address -offset 0x00080000 -range 0x00004000 -target_address_space [get_bd_addr_spaces cpu/Data] [get_bd_addr_segs multi_oscillator/axi_controller/S_AXI/reg0] -force
 
 
   # Restore current instance

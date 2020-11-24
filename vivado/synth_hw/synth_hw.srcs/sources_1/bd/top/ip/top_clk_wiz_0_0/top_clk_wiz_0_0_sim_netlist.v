@@ -1,10 +1,10 @@
 // Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
-// Date        : Sun Nov 22 14:38:11 2020
+// Date        : Tue Nov 24 01:13:07 2020
 // Host        : DESKTOP-VU7H966 running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode funcsim
-//               d:/Repos/artysynth-clean/vivado/synth_hw/synth_hw.srcs/sources_1/bd/top/ip/top_clk_wiz_0_0/top_clk_wiz_0_0_sim_netlist.v
+// Command     : write_verilog -force -mode funcsim -rename_top top_clk_wiz_0_0 -prefix
+//               top_clk_wiz_0_0_ top_clk_wiz_0_0_sim_netlist.v
 // Design      : top_clk_wiz_0_0
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -35,7 +35,6 @@ module top_clk_wiz_0_0
         .resetn(resetn));
 endmodule
 
-(* ORIG_REF_NAME = "top_clk_wiz_0_0_clk_wiz" *) 
 module top_clk_wiz_0_0_top_clk_wiz_0_0_clk_wiz
    (clk_out1,
     resetn,

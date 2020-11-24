@@ -11,18 +11,29 @@
 		// Width of S_AXI data bus
 		parameter integer C_S_AXI_DATA_WIDTH	= 32,
 		// Width of S_AXI address bus
-		parameter integer C_S_AXI_ADDR_WIDTH	= 4
+		parameter integer C_S_AXI_ADDR_WIDTH	= 4,
+		parameter integer FREQ_MULT_PARAM_BITS = 16,
+        parameter integer VIBRATO_WIDTH = 16,
+        parameter integer NUM_VIBRATO = 3,
+		parameter integer BRAM_ADDR_WIDTH = 10,
+		parameter integer BRAM_DATA_WIDTH = 32
 	)
 	(
 		// Users to add ports here
-
+        output [FREQ_MULT_PARAM_BITS-1:0] freq_mult,
+        output [(NUM_VIBRATO * VIBRATO_WIDTH - 1):0] vibrato,
+        
+        output [BRAM_ADDR_WIDTH-1:0] param_bram_addr,
+        output [BRAM_DATA_WIDTH-1:0] param_bram_data,
+        output freq_bram_wen,
+        
 		// User ports ends
 		// Do not modify the ports beyond this line
 
 		// Global Clock Signal
-		input wire  S_AXI_ACLK,
+		input wire  clk,
 		// Global Reset Signal. This Signal is Active LOW
-		input wire  S_AXI_ARESETN,
+		input wire  rst,
 		// Write address (issued by master, acceped by Slave)
 		input wire [C_S_AXI_ADDR_WIDTH-1 : 0] S_AXI_AWADDR,
 		// Write channel Protection type. This signal indicates the
@@ -80,6 +91,9 @@
     		// accept the read data and response information.
 		input wire  S_AXI_RREADY
 	);
+
+    wire S_AXI_ACLK = clk;
+    wire S_AXI_ARESETN = ~rst;
 
 	// AXI4LITE signals
 	reg [C_S_AXI_ADDR_WIDTH-1 : 0] 	axi_awaddr;
@@ -398,7 +412,10 @@
 	end    
 
 	// Add user logic here
-
+    assign freq_mult = 0;
+    assign freq_bram_addr = 0;
+    assign freq_bram_data = 0;
+    assign freq_bram_wen = 0;
 	// User logic ends
 
 	endmodule

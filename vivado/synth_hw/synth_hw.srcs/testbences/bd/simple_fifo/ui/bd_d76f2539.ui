@@ -16,10 +16,10 @@ preplace netloc clk_1 1 0 1 N 100
 preplace netloc rst_1 1 0 1 N 120
 preplace netloc fifo_generator_0_valid 1 1 1 N 80
 preplace netloc fifo_generator_0_prog_full 1 1 1 N 100
-preplace netloc FIFO_WRITE_1 1 0 1 N 60
 preplace netloc FIFO_READ_1 1 0 1 N 80
+preplace netloc FIFO_WRITE_1 1 0 1 N 60
 levelinfo -pg 1 0 190 380
 pagesize -pg 1 -db -bbox -sgen -140 0 490 180
 "
 }
-
+0
