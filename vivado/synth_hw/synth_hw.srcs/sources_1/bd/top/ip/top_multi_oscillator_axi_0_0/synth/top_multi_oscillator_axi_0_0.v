@@ -52,12 +52,11 @@
 
 (* X_CORE_INFO = "multi_oscillator_axi,Vivado 2020.1" *)
 (* CHECK_LICENSE_TYPE = "top_multi_oscillator_axi_0_0,multi_oscillator_axi,{}" *)
-(* CORE_GENERATION_INFO = "top_multi_oscillator_axi_0_0,multi_oscillator_axi,{x_ipProduct=Vivado 2020.1,x_ipVendor=xilinx.com,x_ipLibrary=module_ref,x_ipName=multi_oscillator_axi,x_ipVersion=1.0,x_ipCoreRevision=1,x_ipLanguage=VERILOG,x_ipSimLanguage=MIXED,C_S_AXI_DATA_WIDTH=32,FREQ_MULT_PARAM_BITS=16,VIBRATO_WIDTH=16,NUM_VIBRATO=3,BRAM_ADDR_WIDTH=10,BRAM_DATA_WIDTH=32,NUM_OSCILLATORS=500,C_S_AXI_ADDR_WIDTH=13}" *)
+(* CORE_GENERATION_INFO = "top_multi_oscillator_axi_0_0,multi_oscillator_axi,{x_ipProduct=Vivado 2020.1,x_ipVendor=xilinx.com,x_ipLibrary=module_ref,x_ipName=multi_oscillator_axi,x_ipVersion=1.0,x_ipCoreRevision=1,x_ipLanguage=VERILOG,x_ipSimLanguage=MIXED,C_S_AXI_DATA_WIDTH=32,C_S_AXI_ADDR_WIDTH=32,FREQ_MULT_WIDTH=16,NUM_FREQ_MULT=7,NUM_OSCILLATORS=500,NUM_PARAM_PER_OSC=2,OSC_PER_BANK=16,BRAM_DEPTH=1000,BRAM_ADDR_WIDTH=10,BRAM_DATA_WIDTH=32,DEVICE_ID_WIDTH=4,DEVICE_ID=1}" *)
 (* IP_DEFINITION_SOURCE = "module_ref" *)
 (* DowngradeIPIdentifiedWarnings = "yes" *)
 module top_multi_oscillator_axi_0_0 (
   freq_mult,
-  vibrato,
   param_bram_addr,
   param_bram_data,
   param_bram_wen,
@@ -84,11 +83,10 @@ module top_multi_oscillator_axi_0_0 (
   S_AXI_RREADY
 );
 
-output wire [15 : 0] freq_mult;
-output wire [47 : 0] vibrato;
+output wire [111 : 0] freq_mult;
 output wire [9 : 0] param_bram_addr;
 output wire [31 : 0] param_bram_data;
-output wire param_bram_wen;
+output wire [3 : 0] param_bram_wen;
 (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME clk, ASSOCIATED_BUSIF S_AXI, ASSOCIATED_RESET rst, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN /clk_clk_out1, INSERT_VIP 0" *)
 (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *)
 input wire clk;
@@ -96,7 +94,7 @@ input wire clk;
 (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rst RST" *)
 input wire rst;
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI AWADDR" *)
-input wire [12 : 0] S_AXI_AWADDR;
+input wire [31 : 0] S_AXI_AWADDR;
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI AWPROT" *)
 input wire [2 : 0] S_AXI_AWPROT;
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI AWVALID" *)
@@ -118,7 +116,7 @@ output wire S_AXI_BVALID;
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI BREADY" *)
 input wire S_AXI_BREADY;
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI ARADDR" *)
-input wire [12 : 0] S_AXI_ARADDR;
+input wire [31 : 0] S_AXI_ARADDR;
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI ARPROT" *)
 input wire [2 : 0] S_AXI_ARPROT;
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI ARVALID" *)
@@ -131,23 +129,26 @@ output wire [31 : 0] S_AXI_RDATA;
 output wire [1 : 0] S_AXI_RRESP;
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI RVALID" *)
 output wire S_AXI_RVALID;
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME S_AXI, DATA_WIDTH 32, PROTOCOL AXI4LITE, FREQ_HZ 100000000, ID_WIDTH 0, ADDR_WIDTH 13, AWUSER_WIDTH 0, ARUSER_WIDTH 0, WUSER_WIDTH 0, RUSER_WIDTH 0, BUSER_WIDTH 0, READ_WRITE_MODE READ_WRITE, HAS_BURST 0, HAS_LOCK 0, HAS_PROT 1, HAS_CACHE 0, HAS_QOS 0, HAS_REGION 0, HAS_WSTRB 1, HAS_BRESP 1, HAS_RRESP 1, SUPPORTS_NARROW_BURST 0, NUM_READ_OUTSTANDING 1, NUM_WRITE_OUTSTANDING 1, MAX_BURST_LENGTH 1, PHASE 0.0, CLK_DOMAIN /clk_clk_out1, NUM_READ_THREADS 1, NUM_WRITE_THREADS 1, RUSE\
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME S_AXI, DATA_WIDTH 32, PROTOCOL AXI4LITE, FREQ_HZ 100000000, ID_WIDTH 0, ADDR_WIDTH 32, AWUSER_WIDTH 0, ARUSER_WIDTH 0, WUSER_WIDTH 0, RUSER_WIDTH 0, BUSER_WIDTH 0, READ_WRITE_MODE READ_WRITE, HAS_BURST 0, HAS_LOCK 0, HAS_PROT 1, HAS_CACHE 0, HAS_QOS 0, HAS_REGION 0, HAS_WSTRB 1, HAS_BRESP 1, HAS_RRESP 1, SUPPORTS_NARROW_BURST 0, NUM_READ_OUTSTANDING 1, NUM_WRITE_OUTSTANDING 1, MAX_BURST_LENGTH 1, PHASE 0.0, CLK_DOMAIN /clk_clk_out1, NUM_READ_THREADS 1, NUM_WRITE_THREADS 1, RUSE\
 R_BITS_PER_BYTE 0, WUSER_BITS_PER_BYTE 0, INSERT_VIP 0" *)
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 S_AXI RREADY" *)
 input wire S_AXI_RREADY;
 
   multi_oscillator_axi #(
     .C_S_AXI_DATA_WIDTH(32),
-    .FREQ_MULT_PARAM_BITS(16),
-    .VIBRATO_WIDTH(16),
-    .NUM_VIBRATO(3),
+    .C_S_AXI_ADDR_WIDTH(32),
+    .FREQ_MULT_WIDTH(16),
+    .NUM_FREQ_MULT(7),
+    .NUM_OSCILLATORS(500),
+    .NUM_PARAM_PER_OSC(2),
+    .OSC_PER_BANK(16),
+    .BRAM_DEPTH(1000),
     .BRAM_ADDR_WIDTH(10),
     .BRAM_DATA_WIDTH(32),
-    .NUM_OSCILLATORS(500),
-    .C_S_AXI_ADDR_WIDTH(13)
+    .DEVICE_ID_WIDTH(4),
+    .DEVICE_ID(1)
   ) inst (
     .freq_mult(freq_mult),
-    .vibrato(vibrato),
     .param_bram_addr(param_bram_addr),
     .param_bram_data(param_bram_data),
     .param_bram_wen(param_bram_wen),

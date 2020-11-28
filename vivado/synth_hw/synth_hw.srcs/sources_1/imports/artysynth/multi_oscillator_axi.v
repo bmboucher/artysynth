@@ -1,50 +1,70 @@
 
 `timescale 1 ns / 1 ps
 
-    // AXI address space 0x1???_???? (dev1: Multi-Oscillator)
+    // AXI address space 0x1***_**** (dev1: Multi-Oscillator)
     // ======================================================
-    // REGISTERS
-    //    0x1000_0000 - 0x1000_0002 = Frequency multipliers
+    //
+    // Registers:
+    //
+    //    0b0001_0000_0000_0000_0000_0000_000n_nn00 = Frequency multiplier n (n=1..7)
+    //
     // Direct mapping to parameter BRAM:
-    //    0b0001_1xxx_xxxx_xxxx_xxxx_????_????_??xx
-    //           ?                   ------------
-    //       BRAM flag               BRAM address
+    //
+    //    0b0001_100x_xxxx_xxxx_xxxx_xnnn_nnnn_nn00 = Oscillator n parameter (lower)
+    //    0b0001_101x_xxxx_xxxx_xxxx_xnnn_nnnn_nn00 = Oscillator n parameter (upper)
+    //    
+    //    ** The parameter file is Nx64 bits for N oscillators, mapped to AXI in two
+    //    *  contiguous N-arrays of 32-bit words, but stored in BRAM interleaved so that
+    //    *  all 64 bits are accessed by PORTB each cycle. This requires shifting the
+    //    ** MSB of the address to the LSB between AXI and BRAM.
+    //
+    //    0b0001_110x_xbbb_bbbb_bbbb_bbbb_bnnn_nn00 = Oscillator bank n, mask b parameters (lower)
+    //    0b0001_111x_xbbb_bbbb_bbbb_bbbb_bnnn_nn00 = Oscillator bank n, mask b parameters (upper)
+    //
+    //    ** Oscillators are grouped into 'banks' of 16 which can have parameter values
+    //    *  set simultaneously. The 'n' bits in the address are used to select the bank
+    //    *  number, while the 'b' bits are a mask which select some or all of the
+    //    ** oscillators from the selected bank to apply the data on the data bus to.
 
 	module multi_oscillator_axi #
 	(
-		// Users to add parameters here
-
-		// User parameters ends
-		// Do not modify the parameters beyond this line
-
-		// Width of S_AXI data bus
+		// S_AXI interface from MicroBlaze (32-bit addr/data)
 		parameter integer C_S_AXI_DATA_WIDTH = 32,
 		parameter integer C_S_AXI_ADDR_WIDTH = 32,
+
+        // Number/size of software-controlled frequency multipliers
 		parameter integer FREQ_MULT_WIDTH = 16,
-		parameter integer NUM_FREQ_MULT = 3,
-        parameter integer VIBRATO_WIDTH = 16,
-        parameter integer NUM_VIBRATO = 3,
-		parameter integer BRAM_ADDR_WIDTH = 10,
-		parameter integer BRAM_DATA_WIDTH = 32,
-		parameter integer DEVICE_ID_BITS = 4,
+		parameter integer NUM_FREQ_MULT = 7,
+		
+		// Determines the size of the parameter file
+		parameter integer NUM_OSCILLATORS = 500,
+		parameter integer NUM_PARAM_PER_OSC = 2,
+		parameter integer OSC_PER_BANK = 16,
+
+        // Dimensions of parameter BRAM interface
+		parameter integer BRAM_DEPTH = NUM_OSCILLATORS * NUM_PARAM_PER_OSC,
+		parameter integer BRAM_ADDR_WIDTH = $clog2(BRAM_DEPTH),
+		parameter integer BRAM_DATA_WIDTH = C_S_AXI_DATA_WIDTH,
+
+        // Prefix bits are used to select multiple 'devices' on the same AXI bus
+		parameter integer DEVICE_ID_WIDTH = 4,
 		parameter integer DEVICE_ID = 1
 	)
 	(
-		// Users to add ports here
+	    // Freq multipliers -> accumulator
         output [(NUM_FREQ_MULT * FREQ_MULT_WIDTH - 1):0] freq_mult,
-        output [(NUM_VIBRATO * VIBRATO_WIDTH - 1):0] vibrato,
         
+        // Parameter update in BRAM        
         output [BRAM_ADDR_WIDTH-1:0] param_bram_addr,
         output [BRAM_DATA_WIDTH-1:0] param_bram_data,
-        output param_bram_wen,
+        output [(BRAM_DATA_WIDTH/8)-1:0] param_bram_wen,
         
-		// User ports ends
-		// Do not modify the ports beyond this line
-
 		// Global Clock Signal
 		input wire  clk,
 		// Global Reset Signal. This Signal is Active LOW
 		input wire  rst,
+		
+		// AXI Slave interface
 		// Write address (issued by master, acceped by Slave)
 		input wire [C_S_AXI_ADDR_WIDTH-1 : 0] S_AXI_AWADDR,
 		// Write channel Protection type. This signal indicates the
@@ -103,10 +123,9 @@
 		input wire  S_AXI_RREADY
 	);
 
+	// AXI4LITE signals
     wire S_AXI_ACLK = clk;
     wire S_AXI_ARESETN = ~rst;
-
-	// AXI4LITE signals
 	reg [C_S_AXI_ADDR_WIDTH-1 : 0] 	axi_awaddr;
 	reg  	axi_awready;
 	reg  	axi_wready;
@@ -118,45 +137,81 @@
 	reg [1 : 0] 	axi_rresp;
 	reg  	axi_rvalid;
 	
-	wire [DEVICE_ID_BITS-1:0] axi_device_id = axi_awaddr[(C_S_AXI_ADDR_WIDTH-1):(C_S_AXI_ADDR_WIDTH-DEVICE_ID_BITS)];
-	wire axi_device_valid = (axi_device_id == DEVICE_ID);
+	integer	byte_index;
+	integer freq_mult_i;
+	
+    // Registered output interface to BRAM
+    reg [(BRAM_DATA_WIDTH/8)-1:0]  param_bram_wen_reg; // Latched from S_AXI_WSTRB
+    reg                            param_bram_mask_en; // Used during bank writes
+    wire [(BRAM_DATA_WIDTH/8)-1:0] param_bram_wen_out;
+    reg [BRAM_ADDR_WIDTH-1:0]      param_bram_addr_reg;
+    reg [BRAM_DATA_WIDTH-1:0]      param_bram_data_reg;
+    
+    assign param_bram_wen  = param_bram_wen_out;
+    assign param_bram_addr = param_bram_addr_reg;
+    assign param_bram_data = param_bram_data_reg;
 
-	// Example-specific design signals
-	// local parameter for addressing 32 bit / 64 bit C_S_AXI_DATA_WIDTH
-	// ADDR_LSB is used for addressing 32/64 bit registers/memories
-	// ADDR_LSB = 2 for 32 bits (n downto 2)
-	// ADDR_LSB = 3 for 64 bits (n downto 3)
-	localparam integer ADDR_LSB = (C_S_AXI_DATA_WIDTH/32) + 1;
-	localparam integer OPT_MEM_ADDR_BITS = 1;
-	//----------------------------------------------
-	//-- Signals for user logic register space example
-	//------------------------------------------------
-	//-- Number of Slave Registers 4
-	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg0;
-	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg1;
-	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg2;
-	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg3;
-	wire	 slv_reg_rden;
-	wire	 slv_reg_wren;
-	reg [C_S_AXI_DATA_WIDTH-1:0]	 reg_data_out;
-	integer	 byte_index;
-	reg	 aw_en;
+    // Registered frequency multiplier output 
+	reg [(NUM_FREQ_MULT * FREQ_MULT_WIDTH - 1):0] freq_mult_reg;
+    assign freq_mult = freq_mult_reg;
+	
+    // AXI addresses are memory-mapped, i.e. in bytes, so we ignore
+    // the last two bits for 32-bit words (clog2(32/8) = 2)
+	localparam integer ADDR_LSB = $clog2(C_S_AXI_DATA_WIDTH/8);
+	
+	// Sizes of various ranges in the address bus
+	localparam integer DEVICE_ADDR_WIDTH = C_S_AXI_ADDR_WIDTH - DEVICE_ID_WIDTH;
+	localparam integer FREQ_MULT_ADDR_WIDTH = $clog2(NUM_FREQ_MULT);
+	localparam integer PARAM_INDEX_WIDTH = $clog2(NUM_PARAM_PER_OSC);
+	localparam integer OSC_INDEX_WIDTH = $clog2(NUM_OSCILLATORS);
+	localparam integer NUM_BANKS = (NUM_OSCILLATORS + OSC_PER_BANK - 1) / OSC_PER_BANK;
+	localparam integer BANK_INDEX_WIDTH = $clog2(NUM_BANKS);
+	localparam integer BANK_OFFSET_WIDTH = OSC_INDEX_WIDTH - BANK_INDEX_WIDTH;
 
+    // Decomposing the address bus
+	wire [DEVICE_ADDR_WIDTH-1:0] axi_device_id      = axi_awaddr[(C_S_AXI_ADDR_WIDTH-1) : DEVICE_ADDR_WIDTH];
+	wire bram_flag                                  = axi_awaddr[DEVICE_ADDR_WIDTH-1];
+	wire bank_flag                                  = axi_awaddr[DEVICE_ADDR_WIDTH-2];
+	wire [PARAM_INDEX_WIDTH-1:0] bram_param_index   = axi_awaddr[DEVICE_ADDR_WIDTH-3 -: PARAM_INDEX_WIDTH];
+	wire [FREQ_MULT_ADDR_WIDTH-1:0] freq_mult_index = axi_awaddr[ADDR_LSB +: FREQ_MULT_ADDR_WIDTH];
+	wire [OSC_INDEX_WIDTH-1:0] osc_index            = axi_awaddr[ADDR_LSB +: OSC_INDEX_WIDTH];
+	wire [BANK_INDEX_WIDTH-1:0] bank_index          = axi_awaddr[ADDR_LSB +: BANK_INDEX_WIDTH];
+	wire [OSC_PER_BANK-1:0] bank_mask               = axi_awaddr[ADDR_LSB + BANK_INDEX_WIDTH +: OSC_PER_BANK];
+
+    // Generate AXI R/W signals
+    assign axi_rd_en = axi_arready && S_AXI_ARVALID && ~axi_rvalid;
+    assign axi_wr_en = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID;
+    
+    // Validate address = 0b0001_..._xx00
+	assign axi_device_valid = (axi_device_id == DEVICE_ID);
+	assign mem_access_aligned = ~|axi_awaddr[0 +: ADDR_LSB];
+	assign valid_address = axi_device_valid && mem_access_aligned;
+	
+	// Generate 'pass-through' R/W signals
+    assign rd_en = axi_rd_en && valid_address && ~bram_flag; // Can only read freq mult registers
+	assign wr_en = axi_wr_en && valid_address;
+	assign freq_mult_wr_en = wr_en && ~bram_flag;
+	
 	// I/O Connections assignments
+	assign S_AXI_AWREADY = axi_awready;
+	assign S_AXI_WREADY	 = axi_wready;
+	assign S_AXI_BRESP	 = axi_bresp;
+	assign S_AXI_BVALID	 = axi_bvalid;
+	assign S_AXI_ARREADY = axi_arready;
+	assign S_AXI_RDATA	 = axi_rdata;
+	assign S_AXI_RRESP	 = axi_rresp;
+	assign S_AXI_RVALID	 = axi_rvalid;
 
-	assign S_AXI_AWREADY	= axi_awready;
-	assign S_AXI_WREADY	= axi_wready;
-	assign S_AXI_BRESP	= axi_bresp;
-	assign S_AXI_BVALID	= axi_bvalid;
-	assign S_AXI_ARREADY	= axi_arready;
-	assign S_AXI_RDATA	= axi_rdata;
-	assign S_AXI_RRESP	= axi_rresp;
-	assign S_AXI_RVALID	= axi_rvalid;
+    // Counter for bank writes
+    reg [BANK_OFFSET_WIDTH-1:0] bank_offset;
+	assign bank_wr_en = (wr_en && bram_flag && bank_flag) || bank_offset != 0;
+	assign bank_skip_ahead = ~bank_mask[0] && ~&bank_offset;
+	
 	// Implement axi_awready generation
 	// axi_awready is asserted for one S_AXI_ACLK clock cycle when both
 	// S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_awready is
 	// de-asserted when reset is low.
-
+	reg	aw_en; // Low when a write transaction has been received but not acknowledged
 	always @( posedge S_AXI_ACLK )
 	begin
 	  if ( S_AXI_ARESETN == 1'b0 )
@@ -166,20 +221,16 @@
 	    end 
 	  else
 	    begin    
-	      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en)
+	      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && (bank_offset == 0))
 	        begin
-	          // slave is ready to accept write address when 
-	          // there is a valid write address and write data
-	          // on the write address and data bus. This design 
-	          // expects no outstanding transactions. 
 	          axi_awready <= 1'b1;
 	          aw_en <= 1'b0;
 	        end
-	        else if (S_AXI_BREADY && axi_bvalid)
-	            begin
-	              aw_en <= 1'b1;
-	              axi_awready <= 1'b0;
-	            end
+	      else if (S_AXI_BREADY && axi_bvalid)
+            begin
+              aw_en <= 1'b1;
+              axi_awready <= 1'b0;
+            end
 	      else           
 	        begin
 	          axi_awready <= 1'b0;
@@ -203,6 +254,15 @@
 	        begin
 	          // Write Address latching 
 	          axi_awaddr <= S_AXI_AWADDR;
+	        end
+	      else if ( bank_wr_en )
+	        begin
+	           if ( bank_skip_ahead )
+	               axi_awaddr[ADDR_LSB + BANK_INDEX_WIDTH +: OSC_PER_BANK-2]
+                    <= axi_awaddr[ADDR_LSB + BANK_INDEX_WIDTH + 2 +: OSC_PER_BANK-2];
+               else
+	               axi_awaddr[ADDR_LSB + BANK_INDEX_WIDTH +: OSC_PER_BANK-1]
+                    <= axi_awaddr[ADDR_LSB + BANK_INDEX_WIDTH + 1 +: OSC_PER_BANK-1];                               
 	        end
 	    end 
 	end       
@@ -242,58 +302,26 @@
 	// These registers are cleared when reset (active low) is applied.
 	// Slave register write enable is asserted when valid address and data are available
 	// and the slave is ready to accept the write address and write data.
-	assign slv_wren = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID && axi_device_valid;
-	assign is_bram_addr = axi_awaddr[BRAM_ADDR_WIDTH + ADDR_LSB];
-	assign slv_reg_wren = slv_wren && ~is_bram_addr;
 
-	always @( posedge S_AXI_ACLK )
+    always @( posedge S_AXI_ACLK )
 	begin
 	  if ( S_AXI_ARESETN == 1'b0 )
 	    begin
-	      slv_reg0 <= 0;
-	      slv_reg1 <= 0;
-	      slv_reg2 <= 0;
-	      slv_reg3 <= 0;
+	       freq_mult_reg <= 0;
 	    end 
 	  else begin
-	    if (slv_reg_wren)
+	    if (freq_mult_wr_en)
 	      begin
-	        case ( axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
-	          2'h0:
-	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
-	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
-	                // Respective byte enables are asserted as per write strobes 
-	                // Slave register 0
-	                slv_reg0[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-	              end  
-	          2'h1:
-	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
-	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
-	                // Respective byte enables are asserted as per write strobes 
-	                // Slave register 1
-	                slv_reg1[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-	              end  
-	          2'h2:
-	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
-	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
-	                // Respective byte enables are asserted as per write strobes 
-	                // Slave register 2
-	                slv_reg2[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-	              end  
-	          2'h3:
-	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
-	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
-	                // Respective byte enables are asserted as per write strobes 
-	                // Slave register 3
-	                slv_reg3[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-	              end  
-	          default : begin
-	                      slv_reg0 <= slv_reg0;
-	                      slv_reg1 <= slv_reg1;
-	                      slv_reg2 <= slv_reg2;
-	                      slv_reg3 <= slv_reg3;
-	                    end
-	        endcase
+	        for (freq_mult_i = 1; freq_mult_i <= NUM_FREQ_MULT; freq_mult_i = freq_mult_i + 1) begin
+	          if ( freq_mult_index == freq_mult_i ) begin
+                for ( byte_index = 0; byte_index <= (FREQ_MULT_WIDTH/8)-1; byte_index = byte_index+1 ) begin
+                  if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                  // Respective byte enables are asserted as per write strobes 
+	                  freq_mult_reg[((freq_mult_i-1)*FREQ_MULT_WIDTH + byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end 
+                end
+	          end
+	        end
 	      end
 	  end
 	end    
@@ -317,8 +345,11 @@
 	        begin
 	          // indicates a valid write response is available
 	          axi_bvalid <= 1'b1;
-	          axi_bresp  <= 2'b0; // 'OKAY' response 
-	        end                   // work error responses in future
+	          if (axi_device_valid)
+    	          axi_bresp <= 2'b0; // 'OKAY' response
+    	      else
+    	          axi_bresp <= 2'b10; // 'SLVERR' response if device ID invalid 
+	        end
 	      else
 	        begin
 	          if (S_AXI_BREADY && axi_bvalid) 
@@ -361,6 +392,7 @@
 	    end 
 	end       
 
+
 	// Implement axi_arvalid generation
 	// axi_rvalid is asserted for one S_AXI_ACLK clock cycle when both 
 	// S_AXI_ARVALID and axi_arready are asserted. The slave registers 
@@ -382,7 +414,10 @@
 	        begin
 	          // Valid read data is available at the read data bus
 	          axi_rvalid <= 1'b1;
-	          axi_rresp  <= 2'b0; // 'OKAY' response
+	          if (rd_en)
+    	          axi_rresp <= 2'b0; // 'OKAY' response
+              else
+                  axi_rresp <= 2'b10; // 'SLVERR' response from invalid read
 	        end   
 	      else if (axi_rvalid && S_AXI_RREADY)
 	        begin
@@ -395,17 +430,16 @@
 	// Implement memory mapped register select and read logic generation
 	// Slave register read enable is asserted when valid address is available
 	// and the slave is ready to accept the read address.
-	assign slv_reg_rden = axi_arready & S_AXI_ARVALID & ~axi_rvalid && axi_device_valid && ~is_bram_addr;
+    reg [C_S_AXI_DATA_WIDTH-1:0] reg_data_out;
 	always @(*)
 	begin
-	      // Address decoding for reading registers
-	      case ( axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
-	        2'h0   : reg_data_out <= slv_reg0;
-	        2'h1   : reg_data_out <= slv_reg1;
-	        2'h2   : reg_data_out <= slv_reg2;
-	        2'h3   : reg_data_out <= slv_reg3;
-	        default : reg_data_out <= 0;
-	      endcase
+	   reg_data_out <= 0;
+	   for (freq_mult_i = 1; freq_mult_i <= NUM_FREQ_MULT; freq_mult_i = freq_mult_i + 1) begin
+	       if ( freq_mult_index == freq_mult_i ) begin
+	           reg_data_out[FREQ_MULT_WIDTH-1:0] <= 
+	               freq_mult_reg[(freq_mult_i-1)*FREQ_MULT_WIDTH +: FREQ_MULT_WIDTH];
+	       end
+	   end
 	end
 
 	// Output register or memory read data
@@ -420,38 +454,46 @@
 	      // When there is a valid read address (S_AXI_ARVALID) with 
 	      // acceptance of read address by the slave (axi_arready), 
 	      // output the read dada 
-	      if (slv_reg_rden)
+	      if (rd_en)
 	        begin
 	          axi_rdata <= reg_data_out;     // register read data
 	        end   
 	    end
 	end    
 
-	// Add user logic here
-	
-	// Map a portion of the address space directly to the parameter BRAM
-	// BRAM address ?????? => AXI address ...000001??????xx   (ADDR_LSB=2)
-	wire param_bram_wren = slv_wren && is_bram_addr;
-	
 	// Latch BRAM outputs
-	reg param_bram_wen_reg = 0;
-    reg [BRAM_ADDR_WIDTH-1:0] param_bram_addr_reg;
-    reg [BRAM_DATA_WIDTH-1:0] param_bram_data_reg;
 	always @( posedge clk )
 	begin
-	    if (param_bram_wren) begin
-	       param_bram_wen_reg = 1;
-	       param_bram_addr_reg = axi_awaddr[(BRAM_ADDR_WIDTH + ADDR_LSB - 1):ADDR_LSB];
-	       param_bram_data_reg = S_AXI_WDATA; 
-        end else begin
-           param_bram_wen_reg = 0;
-        end
-	end    
-    assign param_bram_wen = rst ? 0 : param_bram_wen_reg;
-    assign param_bram_addr = param_bram_addr_reg;
-    assign param_bram_data = param_bram_data_reg;
+      param_bram_wen_reg <= 0;
+      param_bram_mask_en <= 0;
+      if ( S_AXI_ARESETN == 1'b0 ) begin
+        bank_offset <= 0;
+        param_bram_addr_reg <= 0;
+        param_bram_data_reg <= 0;
+      end else begin
+        if (wr_en && bram_flag) begin
+          param_bram_wen_reg <= S_AXI_WSTRB;
+   	      param_bram_data_reg <= S_AXI_WDATA;
+	      if (~bank_flag) begin
+	        param_bram_addr_reg <= {osc_index, bram_param_index};
+   	        param_bram_mask_en <= 1;
+          end
+        end  
+      
+	    if ( bank_wr_en ) begin
+          param_bram_addr_reg <= {bank_index, bank_offset, bram_param_index};
+          if (bank_skip_ahead) begin
+              // Look-ahead logic, skip next oscillator in bank if deselected
+              // In the extreme, an all-zero bank mask 'writes' in 8 cycles instead of 16
+              param_bram_mask_en <= bank_mask[1];
+              bank_offset <= bank_offset + 2;
+          end else begin
+              param_bram_mask_en <= bank_mask[0];
+              bank_offset <= bank_offset + 1;          
+          end          
+        end 
+      end
+	end
 	
-    assign freq_mult = slv_reg0[(FREQ_MULT_WIDTH-1):0];
-	// User logic ends
-
-	endmodule
+	assign param_bram_wen_out = param_bram_mask_en ? param_bram_wen_reg : 0;
+endmodule

@@ -308,22 +308,10 @@
           }
         },
         "interface_nets": {
-          "microblaze_0_ilmb": {
-            "interface_ports": [
-              "ILMB",
-              "ilmb_v10/LMB_M"
-            ]
-          },
           "microblaze_0_dlmb_cntlr": {
             "interface_ports": [
               "dlmb_bram_if_cntlr/BRAM_PORT",
               "lmb_bram/BRAM_PORTA"
-            ]
-          },
-          "microblaze_0_ilmb_bus": {
-            "interface_ports": [
-              "ilmb_v10/LMB_Sl_0",
-              "ilmb_bram_if_cntlr/SLMB"
             ]
           },
           "microblaze_0_dlmb_bus": {
@@ -336,6 +324,18 @@
             "interface_ports": [
               "DLMB",
               "dlmb_v10/LMB_M"
+            ]
+          },
+          "microblaze_0_ilmb_bus": {
+            "interface_ports": [
+              "ilmb_v10/LMB_Sl_0",
+              "ilmb_bram_if_cntlr/SLMB"
+            ]
+          },
+          "microblaze_0_ilmb": {
+            "interface_ports": [
+              "ILMB",
+              "ilmb_v10/LMB_M"
             ]
           },
           "microblaze_0_ilmb_cntlr": {
@@ -559,7 +559,7 @@
             "mode": "Slave",
             "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
             "apertures": [
-              "0x0008_0000 [ 16K ]"
+              "0x1000_0000 [ 256M ]"
             ]
           }
         },
@@ -851,7 +851,7 @@
                     "value_src": "constant"
                   },
                   "ADDR_WIDTH": {
-                    "value": "13",
+                    "value": "32",
                     "value_src": "auto"
                   },
                   "AWUSER_WIDTH": {
@@ -935,7 +935,7 @@
                   "AWADDR": {
                     "physical_name": "S_AXI_AWADDR",
                     "direction": "I",
-                    "left": "12",
+                    "left": "31",
                     "right": "0"
                   },
                   "AWPROT": {
@@ -989,7 +989,7 @@
                   "ARADDR": {
                     "physical_name": "S_AXI_ARADDR",
                     "direction": "I",
-                    "left": "12",
+                    "left": "31",
                     "right": "0"
                   },
                   "ARPROT": {
@@ -1032,12 +1032,7 @@
             "ports": {
               "freq_mult": {
                 "direction": "O",
-                "left": "15",
-                "right": "0"
-              },
-              "vibrato": {
-                "direction": "O",
-                "left": "47",
+                "left": "111",
                 "right": "0"
               },
               "param_bram_addr": {
@@ -1051,7 +1046,9 @@
                 "right": "0"
               },
               "param_bram_wen": {
-                "direction": "O"
+                "direction": "O",
+                "left": "3",
+                "right": "0"
               },
               "clk": {
                 "type": "clk",
@@ -1108,12 +1105,6 @@
             "ports": [
               "axi_controller/freq_mult",
               "accumulator/freq_mult"
-            ]
-          },
-          "axi_controller_vibrato": {
-            "ports": [
-              "axi_controller/vibrato",
-              "accumulator/vibrato"
             ]
           },
           "axi_controller_param_bram_data": {
@@ -1234,10 +1225,10 @@
           "cpu_mem/ILMB"
         ]
       },
-      "microblaze_0_dlmb_1": {
+      "cpu_axi_periph_M00_AXI": {
         "interface_ports": [
-          "cpu/DLMB",
-          "cpu_mem/DLMB"
+          "cpu_axi_periph/M00_AXI",
+          "multi_oscillator/S_AXI"
         ]
       },
       "microblaze_0_debug": {
@@ -1252,10 +1243,10 @@
           "cpu_axi_periph/S00_AXI"
         ]
       },
-      "cpu_axi_periph_M00_AXI": {
+      "microblaze_0_dlmb_1": {
         "interface_ports": [
-          "cpu_axi_periph/M00_AXI",
-          "multi_oscillator/S_AXI"
+          "cpu/DLMB",
+          "cpu_mem/DLMB"
         ]
       }
     },
@@ -1331,15 +1322,15 @@
             "range": "4G",
             "width": "32",
             "segments": {
+              "SEG_axi_controller_reg0": {
+                "address_block": "/multi_oscillator/axi_controller/S_AXI/reg0",
+                "offset": "0x10000000",
+                "range": "256M"
+              },
               "SEG_dlmb_bram_if_cntlr_Mem": {
                 "address_block": "/cpu_mem/dlmb_bram_if_cntlr/SLMB/Mem",
                 "offset": "0x00000000",
                 "range": "32K"
-              },
-              "SEG_multi_oscillator_axi_0_reg0": {
-                "address_block": "/multi_oscillator/axi_controller/S_AXI/reg0",
-                "offset": "0x00080000",
-                "range": "16K"
               }
             }
           },

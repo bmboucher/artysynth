@@ -1,7 +1,7 @@
 //Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
-//Date        : Tue Nov 24 08:05:14 2020
+//Date        : Fri Nov 27 23:48:37 2020
 //Host        : DESKTOP-VU7H966 running 64-bit major release  (build 9200)
 //Command     : generate_target top.bd
 //Design      : top
@@ -314,11 +314,10 @@ module multi_oscillator_imp_15JZR68
   wire S_AXI_1_WREADY;
   wire [3:0]S_AXI_1_WSTRB;
   wire S_AXI_1_WVALID;
-  wire axi_controller_freq_bram_wen;
-  wire [15:0]axi_controller_freq_mult;
+  wire [3:0]axi_controller_freq_bram_wen;
+  wire [111:0]axi_controller_freq_mult;
   wire [9:0]axi_controller_param_bram_addr;
   wire [31:0]axi_controller_param_bram_data;
-  wire [47:0]axi_controller_vibrato;
   wire [63:0]blk_mem_gen_0_doutb;
   wire clk_1;
   wire [63:0]fifo_generator_0_dout;
@@ -364,7 +363,7 @@ module multi_oscillator_imp_15JZR68
   assign rst_1 = rst;
   top_multi_oscillator_acc_0_0 accumulator
        (.clk(clk_1),
-        .freq_mult(axi_controller_freq_mult),
+        .freq_mult(axi_controller_freq_mult[15:0]),
         .next_state(multi_oscillator_acc_0_next_state),
         .osc_amp(multi_oscillator_acc_0_osc_amp),
         .osc_index(multi_oscillator_acc_0_osc_index),
@@ -375,13 +374,13 @@ module multi_oscillator_imp_15JZR68
         .prev_state(state_fifo_0_prev_state),
         .rst(rst_1),
         .state_fifo_en(multi_oscillator_acc_0_state_fifo_en),
-        .vibrato(axi_controller_vibrato));
+        .vibrato({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}));
   top_multi_oscillator_axi_0_0 axi_controller
-       (.S_AXI_ARADDR(S_AXI_1_ARADDR[12:0]),
+       (.S_AXI_ARADDR(S_AXI_1_ARADDR),
         .S_AXI_ARPROT(S_AXI_1_ARPROT),
         .S_AXI_ARREADY(S_AXI_1_ARREADY),
         .S_AXI_ARVALID(S_AXI_1_ARVALID),
-        .S_AXI_AWADDR(S_AXI_1_AWADDR[12:0]),
+        .S_AXI_AWADDR(S_AXI_1_AWADDR),
         .S_AXI_AWPROT(S_AXI_1_AWPROT),
         .S_AXI_AWREADY(S_AXI_1_AWREADY),
         .S_AXI_AWVALID(S_AXI_1_AWVALID),
@@ -401,8 +400,7 @@ module multi_oscillator_imp_15JZR68
         .param_bram_addr(axi_controller_param_bram_addr),
         .param_bram_data(axi_controller_param_bram_data),
         .param_bram_wen(axi_controller_freq_bram_wen),
-        .rst(rst_1),
-        .vibrato(axi_controller_vibrato));
+        .rst(rst_1));
   top_blk_mem_gen_0_3 param_bram
        (.addra(axi_controller_param_bram_addr),
         .addrb(multi_oscillator_acc_0_param_bram_addr),
@@ -411,7 +409,7 @@ module multi_oscillator_imp_15JZR68
         .dina(axi_controller_param_bram_data),
         .doutb(blk_mem_gen_0_doutb),
         .rstb(rst_1),
-        .wea(axi_controller_freq_bram_wen));
+        .wea(axi_controller_freq_bram_wen[0]));
   top_fifo_generator_0_1 state_fifo
        (.clk(clk_1),
         .din(state_fifo_0_state_fifo_dout),

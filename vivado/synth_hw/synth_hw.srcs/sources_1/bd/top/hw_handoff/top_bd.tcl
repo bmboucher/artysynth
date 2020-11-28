@@ -269,7 +269,6 @@ proc create_hier_cell_multi_oscillator { parentCell nameHier } {
   connect_bd_net -net axi_controller_freq_mult [get_bd_pins accumulator/freq_mult] [get_bd_pins axi_controller/freq_mult]
   connect_bd_net -net axi_controller_param_bram_addr [get_bd_pins axi_controller/param_bram_addr] [get_bd_pins param_bram/addra]
   connect_bd_net -net axi_controller_param_bram_data [get_bd_pins axi_controller/param_bram_data] [get_bd_pins param_bram/dina]
-  connect_bd_net -net axi_controller_vibrato [get_bd_pins accumulator/vibrato] [get_bd_pins axi_controller/vibrato]
   connect_bd_net -net blk_mem_gen_0_doutb [get_bd_pins accumulator/param_bram_data] [get_bd_pins param_bram/doutb]
   connect_bd_net -net clk_1 [get_bd_pins clk] [get_bd_pins accumulator/clk] [get_bd_pins axi_controller/clk] [get_bd_pins param_bram/clka] [get_bd_pins param_bram/clkb] [get_bd_pins state_fifo/clk] [get_bd_pins state_fifo_controller/clk]
   connect_bd_net -net fifo_generator_0_dout [get_bd_pins state_fifo/dout] [get_bd_pins state_fifo_controller/state_fifo_din]
@@ -506,9 +505,9 @@ proc create_root_design { parentCell } {
   connect_bd_net -net sys_clock_1 [get_bd_ports sys_clock] [get_bd_pins clk/clk_in1]
 
   # Create address segments
+  assign_bd_address -offset 0x10000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces cpu/Data] [get_bd_addr_segs multi_oscillator/axi_controller/S_AXI/reg0] -force
   assign_bd_address -offset 0x00000000 -range 0x00008000 -target_address_space [get_bd_addr_spaces cpu/Data] [get_bd_addr_segs cpu_mem/dlmb_bram_if_cntlr/SLMB/Mem] -force
   assign_bd_address -offset 0x00000000 -range 0x00008000 -target_address_space [get_bd_addr_spaces cpu/Instruction] [get_bd_addr_segs cpu_mem/ilmb_bram_if_cntlr/SLMB/Mem] -force
-  assign_bd_address -offset 0x00080000 -range 0x00004000 -target_address_space [get_bd_addr_spaces cpu/Data] [get_bd_addr_segs multi_oscillator/axi_controller/S_AXI/reg0] -force
 
 
   # Restore current instance
