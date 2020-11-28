@@ -308,28 +308,10 @@
           }
         },
         "interface_nets": {
-          "microblaze_0_dlmb_cntlr": {
-            "interface_ports": [
-              "dlmb_bram_if_cntlr/BRAM_PORT",
-              "lmb_bram/BRAM_PORTA"
-            ]
-          },
           "microblaze_0_dlmb_bus": {
             "interface_ports": [
               "dlmb_v10/LMB_Sl_0",
               "dlmb_bram_if_cntlr/SLMB"
-            ]
-          },
-          "microblaze_0_dlmb": {
-            "interface_ports": [
-              "DLMB",
-              "dlmb_v10/LMB_M"
-            ]
-          },
-          "microblaze_0_ilmb_bus": {
-            "interface_ports": [
-              "ilmb_v10/LMB_Sl_0",
-              "ilmb_bram_if_cntlr/SLMB"
             ]
           },
           "microblaze_0_ilmb": {
@@ -338,10 +320,28 @@
               "ilmb_v10/LMB_M"
             ]
           },
+          "microblaze_0_ilmb_bus": {
+            "interface_ports": [
+              "ilmb_v10/LMB_Sl_0",
+              "ilmb_bram_if_cntlr/SLMB"
+            ]
+          },
+          "microblaze_0_dlmb_cntlr": {
+            "interface_ports": [
+              "dlmb_bram_if_cntlr/BRAM_PORT",
+              "lmb_bram/BRAM_PORTA"
+            ]
+          },
           "microblaze_0_ilmb_cntlr": {
             "interface_ports": [
               "ilmb_bram_if_cntlr/BRAM_PORT",
               "lmb_bram/BRAM_PORTB"
+            ]
+          },
+          "microblaze_0_dlmb": {
+            "interface_ports": [
+              "DLMB",
+              "dlmb_v10/LMB_M"
             ]
           }
         },
@@ -1219,18 +1219,6 @@
       }
     },
     "interface_nets": {
-      "microblaze_0_ilmb_1": {
-        "interface_ports": [
-          "cpu/ILMB",
-          "cpu_mem/ILMB"
-        ]
-      },
-      "cpu_axi_periph_M00_AXI": {
-        "interface_ports": [
-          "cpu_axi_periph/M00_AXI",
-          "multi_oscillator/S_AXI"
-        ]
-      },
       "microblaze_0_debug": {
         "interface_ports": [
           "cpu_debug/MBDEBUG_0",
@@ -1247,6 +1235,18 @@
         "interface_ports": [
           "cpu/DLMB",
           "cpu_mem/DLMB"
+        ]
+      },
+      "cpu_axi_periph_M00_AXI": {
+        "interface_ports": [
+          "cpu_axi_periph/M00_AXI",
+          "multi_oscillator/S_AXI"
+        ]
+      },
+      "microblaze_0_ilmb_1": {
+        "interface_ports": [
+          "cpu/ILMB",
+          "cpu_mem/ILMB"
         ]
       }
     },

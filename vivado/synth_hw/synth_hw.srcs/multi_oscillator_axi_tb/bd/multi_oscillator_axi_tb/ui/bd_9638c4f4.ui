@@ -14,11 +14,11 @@ preplace portBus param_bram_addr -pg 1 -lvl 4 -x 980 -y 300 -defaultsOSRD
 preplace portBus param_bram_data -pg 1 -lvl 4 -x 980 -y 320 -defaultsOSRD
 preplace portBus param_bram_wen -pg 1 -lvl 4 -x 980 -y 340 -defaultsOSRD
 preplace portBus peripheral_reset -pg 1 -lvl 4 -x 980 -y 360 -defaultsOSRD
-preplace inst axi_controller -pg 1 -lvl 2 -x 560 -y 310 -defaultsOSRD
 preplace inst param_bram -pg 1 -lvl 3 -x 860 -y 510 -defaultsOSRD
 preplace inst axi_vip -pg 1 -lvl 1 -x 210 -y 290 -defaultsOSRD
 preplace inst clk_wiz -pg 1 -lvl 1 -x 210 -y 410 -defaultsOSRD
 preplace inst rst_clk_wiz_100M -pg 1 -lvl 1 -x 210 -y 100 -defaultsOSRD
+preplace inst axi_controller -pg 1 -lvl 2 -x 560 -y 310 -defaultsOSRD
 preplace netloc clk_1 1 0 3 30 220 390 400 720
 preplace netloc multi_oscillator_axi_0_freq_mult 1 2 2 N 280 N
 preplace netloc multi_oscillator_axi_0_param_bram_addr 1 2 2 760 300 N

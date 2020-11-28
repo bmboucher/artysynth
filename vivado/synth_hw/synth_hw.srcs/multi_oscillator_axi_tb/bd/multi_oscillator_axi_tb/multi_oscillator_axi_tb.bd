@@ -10,11 +10,11 @@
       "validated": "true"
     },
     "design_tree": {
-      "axi_controller": "",
       "param_bram": "",
       "axi_vip": "",
       "clk_wiz": "",
-      "rst_clk_wiz_100M": ""
+      "rst_clk_wiz_100M": "",
+      "axi_controller": ""
     },
     "ports": {
       "freq_mult": {
@@ -102,11 +102,155 @@
       }
     },
     "components": {
+      "param_bram": {
+        "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
+        "xci_name": "multi_oscillator_axi_tb_blk_mem_gen_0_0",
+        "parameters": {
+          "Assume_Synchronous_Clk": {
+            "value": "true"
+          },
+          "Byte_Size": {
+            "value": "8"
+          },
+          "EN_SAFETY_CKT": {
+            "value": "false"
+          },
+          "Enable_32bit_Address": {
+            "value": "false"
+          },
+          "Enable_A": {
+            "value": "Always_Enabled"
+          },
+          "Enable_B": {
+            "value": "Always_Enabled"
+          },
+          "Memory_Type": {
+            "value": "Simple_Dual_Port_RAM"
+          },
+          "Operating_Mode_A": {
+            "value": "WRITE_FIRST"
+          },
+          "Port_B_Clock": {
+            "value": "100"
+          },
+          "Port_B_Enable_Rate": {
+            "value": "100"
+          },
+          "Read_Width_B": {
+            "value": "64"
+          },
+          "Register_PortB_Output_of_Memory_Primitives": {
+            "value": "true"
+          },
+          "Use_Byte_Write_Enable": {
+            "value": "true"
+          },
+          "Use_RSTB_Pin": {
+            "value": "true"
+          },
+          "Write_Depth_A": {
+            "value": "1024"
+          },
+          "Write_Width_A": {
+            "value": "32"
+          },
+          "Write_Width_B": {
+            "value": "64"
+          },
+          "use_bram_block": {
+            "value": "Stand_Alone"
+          }
+        }
+      },
+      "axi_vip": {
+        "vlnv": "xilinx.com:ip:axi_vip:1.1",
+        "xci_name": "multi_oscillator_axi_tb_axi_vip_0_0",
+        "parameters": {
+          "ADDR_WIDTH": {
+            "value": "32"
+          },
+          "DATA_WIDTH": {
+            "value": "32"
+          },
+          "HAS_BRESP": {
+            "value": "1"
+          },
+          "HAS_PROT": {
+            "value": "1"
+          },
+          "HAS_RRESP": {
+            "value": "1"
+          },
+          "HAS_WSTRB": {
+            "value": "1"
+          },
+          "INTERFACE_MODE": {
+            "value": "MASTER"
+          },
+          "PROTOCOL": {
+            "value": "AXI4LITE"
+          },
+          "READ_WRITE_MODE": {
+            "value": "READ_WRITE"
+          }
+        },
+        "addressing": {
+          "address_spaces": {
+            "Master_AXI": {
+              "range": "4G",
+              "width": "32"
+            }
+          },
+          "interface_ports": {
+            "M_AXI": {
+              "mode": "Master",
+              "address_space_ref": "Master_AXI",
+              "base_address": {
+                "minimum": "0x00000000",
+                "maximum": "0xFFFFFFFF"
+              }
+            }
+          }
+        }
+      },
+      "clk_wiz": {
+        "vlnv": "xilinx.com:ip:clk_wiz:6.0",
+        "xci_name": "multi_oscillator_axi_tb_clk_wiz_0",
+        "parameters": {
+          "CLK_IN1_BOARD_INTERFACE": {
+            "value": "sys_clock"
+          },
+          "RESET_BOARD_INTERFACE": {
+            "value": "reset"
+          },
+          "RESET_PORT": {
+            "value": "resetn"
+          },
+          "RESET_TYPE": {
+            "value": "ACTIVE_LOW"
+          },
+          "USE_BOARD_FLOW": {
+            "value": "true"
+          }
+        }
+      },
+      "rst_clk_wiz_100M": {
+        "vlnv": "xilinx.com:ip:proc_sys_reset:5.0",
+        "xci_name": "multi_oscillator_axi_tb_rst_clk_wiz_100M_0",
+        "parameters": {
+          "RESET_BOARD_INTERFACE": {
+            "value": "reset"
+          },
+          "USE_BOARD_FLOW": {
+            "value": "true"
+          }
+        }
+      },
       "axi_controller": {
         "vlnv": "xilinx.com:module_ref:multi_oscillator_axi:1.0",
         "xci_name": "multi_oscillator_axi_tb_multi_oscillator_axi_0_0",
         "reference_info": {
-          "ref_type": "unknown",
+          "ref_type": "hdl",
           "ref_name": "multi_oscillator_axi",
           "boundary_crc": "0x0"
         },
@@ -379,153 +523,10 @@
             "direction": "I",
             "parameters": {
               "POLARITY": {
-                "value": "ACTIVE_HIGH"
+                "value": "ACTIVE_HIGH",
+                "value_src": "const_prop"
               }
             }
-          }
-        }
-      },
-      "param_bram": {
-        "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
-        "xci_name": "multi_oscillator_axi_tb_blk_mem_gen_0_0",
-        "parameters": {
-          "Assume_Synchronous_Clk": {
-            "value": "true"
-          },
-          "Byte_Size": {
-            "value": "8"
-          },
-          "EN_SAFETY_CKT": {
-            "value": "false"
-          },
-          "Enable_32bit_Address": {
-            "value": "false"
-          },
-          "Enable_A": {
-            "value": "Always_Enabled"
-          },
-          "Enable_B": {
-            "value": "Always_Enabled"
-          },
-          "Memory_Type": {
-            "value": "Simple_Dual_Port_RAM"
-          },
-          "Operating_Mode_A": {
-            "value": "WRITE_FIRST"
-          },
-          "Port_B_Clock": {
-            "value": "100"
-          },
-          "Port_B_Enable_Rate": {
-            "value": "100"
-          },
-          "Read_Width_B": {
-            "value": "64"
-          },
-          "Register_PortB_Output_of_Memory_Primitives": {
-            "value": "true"
-          },
-          "Use_Byte_Write_Enable": {
-            "value": "true"
-          },
-          "Use_RSTB_Pin": {
-            "value": "true"
-          },
-          "Write_Depth_A": {
-            "value": "1024"
-          },
-          "Write_Width_A": {
-            "value": "32"
-          },
-          "Write_Width_B": {
-            "value": "64"
-          },
-          "use_bram_block": {
-            "value": "Stand_Alone"
-          }
-        }
-      },
-      "axi_vip": {
-        "vlnv": "xilinx.com:ip:axi_vip:1.1",
-        "xci_name": "multi_oscillator_axi_tb_axi_vip_0_0",
-        "parameters": {
-          "ADDR_WIDTH": {
-            "value": "32"
-          },
-          "DATA_WIDTH": {
-            "value": "32"
-          },
-          "HAS_BRESP": {
-            "value": "1"
-          },
-          "HAS_PROT": {
-            "value": "1"
-          },
-          "HAS_RRESP": {
-            "value": "1"
-          },
-          "HAS_WSTRB": {
-            "value": "1"
-          },
-          "INTERFACE_MODE": {
-            "value": "MASTER"
-          },
-          "PROTOCOL": {
-            "value": "AXI4LITE"
-          },
-          "READ_WRITE_MODE": {
-            "value": "READ_WRITE"
-          }
-        },
-        "addressing": {
-          "address_spaces": {
-            "Master_AXI": {
-              "range": "4G",
-              "width": "32"
-            }
-          },
-          "interface_ports": {
-            "M_AXI": {
-              "mode": "Master",
-              "address_space_ref": "Master_AXI",
-              "base_address": {
-                "minimum": "0x00000000",
-                "maximum": "0xFFFFFFFF"
-              }
-            }
-          }
-        }
-      },
-      "clk_wiz": {
-        "vlnv": "xilinx.com:ip:clk_wiz:6.0",
-        "xci_name": "multi_oscillator_axi_tb_clk_wiz_0",
-        "parameters": {
-          "CLK_IN1_BOARD_INTERFACE": {
-            "value": "sys_clock"
-          },
-          "RESET_BOARD_INTERFACE": {
-            "value": "reset"
-          },
-          "RESET_PORT": {
-            "value": "resetn"
-          },
-          "RESET_TYPE": {
-            "value": "ACTIVE_LOW"
-          },
-          "USE_BOARD_FLOW": {
-            "value": "true"
-          }
-        }
-      },
-      "rst_clk_wiz_100M": {
-        "vlnv": "xilinx.com:ip:proc_sys_reset:5.0",
-        "xci_name": "multi_oscillator_axi_tb_rst_clk_wiz_100M_0",
-        "parameters": {
-          "RESET_BOARD_INTERFACE": {
-            "value": "reset"
-          },
-          "USE_BOARD_FLOW": {
-            "value": "true"
           }
         }
       }
@@ -542,11 +543,11 @@
       "clk_1": {
         "ports": [
           "clk_wiz/clk_out1",
-          "axi_controller/clk",
           "param_bram/clka",
           "param_bram/clkb",
           "axi_vip/aclk",
-          "rst_clk_wiz_100M/slowest_sync_clk"
+          "rst_clk_wiz_100M/slowest_sync_clk",
+          "axi_controller/clk"
         ]
       },
       "multi_oscillator_axi_0_freq_mult": {
@@ -597,9 +598,9 @@
       "rst_clk_wiz_100M_peripheral_reset": {
         "ports": [
           "rst_clk_wiz_100M/peripheral_reset",
-          "axi_controller/rst",
           "param_bram/rstb",
-          "peripheral_reset"
+          "peripheral_reset",
+          "axi_controller/rst"
         ]
       },
       "rst_clk_wiz_100M_peripheral_aresetn": {

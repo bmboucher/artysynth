@@ -192,10 +192,6 @@ proc create_root_design { parentCell } {
      return 1
    }
   
-  set_property -dict [ list \
-   CONFIG.POLARITY {ACTIVE_HIGH} \
- ] [get_bd_pins /axi_controller/rst]
-
   # Create instance: axi_vip, and set properties
   set axi_vip [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_vip:1.1 axi_vip ]
   set_property -dict [ list \
