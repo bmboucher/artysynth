@@ -341,11 +341,11 @@
 	    end 
 	  else
 	    begin    
-	      if (axi_awready && S_AXI_AWVALID && ~axi_bvalid && axi_wready && S_AXI_WVALID)
+	      if (axi_wr_en && ~axi_bvalid)
 	        begin
 	          // indicates a valid write response is available
 	          axi_bvalid <= 1'b1;
-	          if (axi_device_valid)
+	          if (wr_en)
     	          axi_bresp <= 2'b0; // 'OKAY' response
     	      else
     	          axi_bresp <= 2'b10; // 'SLVERR' response if device ID invalid 
@@ -410,7 +410,7 @@
 	    end 
 	  else
 	    begin    
-	      if (axi_arready && S_AXI_ARVALID && ~axi_rvalid)
+	      if (axi_rd_en)
 	        begin
 	          // Valid read data is available at the read data bus
 	          axi_rvalid <= 1'b1;
