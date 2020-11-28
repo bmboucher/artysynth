@@ -4247,7 +4247,7 @@
     <spirit:fileSet>
       <spirit:name>xilinx_verilogsynthesis_view_fileset</spirit:name>
       <spirit:file>
-	      <spirit:name>../../ipshared/ce6c/hdl/axi_vip_v1_1_vl/_rfs.sv</spirit:name>
+	      <spirit:name>../../ipshared/ce6c/hdl/axi_vip_v1_1_vl_rfs.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
         <spirit:logicalName>axi_vip_v1_1_7</spirit:logicalName>
       </spirit:file>

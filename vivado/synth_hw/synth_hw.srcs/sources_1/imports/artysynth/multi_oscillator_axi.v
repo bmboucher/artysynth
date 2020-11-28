@@ -250,7 +250,7 @@
 	    end 
 	  else
 	    begin    
-	      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en)
+	      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && (bank_offset == 0))
 	        begin
 	          // Write Address latching 
 	          axi_awaddr <= S_AXI_AWADDR;
@@ -280,7 +280,7 @@
 	    end 
 	  else
 	    begin    
-	      if (~axi_wready && S_AXI_WVALID && S_AXI_AWVALID && aw_en )
+	      if (~axi_wready && S_AXI_WVALID && S_AXI_AWVALID && aw_en && (bank_offset == 0) )
 	        begin
 	          // slave is ready to accept write data when 
 	          // there is a valid write address and write data
@@ -464,23 +464,24 @@
 	// Latch BRAM outputs
 	always @( posedge clk )
 	begin
-      param_bram_wen_reg <= 0;
-      param_bram_mask_en <= 0;
       if ( S_AXI_ARESETN == 1'b0 ) begin
         bank_offset <= 0;
         param_bram_addr_reg <= 0;
+        param_bram_wen_reg <= 0;
+        param_bram_mask_en <= 0;
         param_bram_data_reg <= 0;
       end else begin
         if (wr_en && bram_flag) begin
           param_bram_wen_reg <= S_AXI_WSTRB;
-   	      param_bram_data_reg <= S_AXI_WDATA;
+          param_bram_mask_en <= 1;
+          param_bram_data_reg <= S_AXI_WDATA;
 	      if (~bank_flag) begin
 	        param_bram_addr_reg <= {osc_index, bram_param_index};
-   	        param_bram_mask_en <= 1;
           end
         end  
       
 	    if ( bank_wr_en ) begin
+	      param_bram_wen_reg <= param_bram_wen_reg;
           param_bram_addr_reg <= {bank_index, bank_offset, bram_param_index};
           if (bank_skip_ahead) begin
               // Look-ahead logic, skip next oscillator in bank if deselected
